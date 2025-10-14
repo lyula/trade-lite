@@ -10,7 +10,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img
-              src="/public/lite-logo.jpg"
+              src="/lite-logo.jpg"
               alt="TradeLite Logo"
               width="40"
               height="40"
