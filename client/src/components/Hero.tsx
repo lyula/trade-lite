@@ -42,7 +42,7 @@ const Hero = () => {
                 variant="hero"
                 size="xl"
                 className="group"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/register")}
               >
                 Create Your Account
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />

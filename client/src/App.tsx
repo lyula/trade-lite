@@ -19,38 +19,43 @@ import Markets from "./pages/Markets";
 import Platforms from "./pages/Platforms";
 import Refer from "./pages/Refer";
 import SSOCallback from "./pages/SSOCallback";
+import { ClerkProvider } from "@clerk/clerk-react";
 
 const queryClient = new QueryClient();
 
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login/sso-callback" element={<SSOCallback />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="deposits" element={<Deposits />} />
-            <Route path="withdrawals" element={<Withdrawals />} />
-            <Route path="transfers" element={<Transfers />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="analysis" element={<Analysis />} />
-            <Route path="automation" element={<Automation />} />
-            <Route path="markets" element={<Markets />} />
-            <Route path="platforms" element={<Platforms />} />
-            <Route path="refer" element={<Refer />} />
-          </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ClerkProvider publishableKey={clerkPubKey}>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login/sso-callback" element={<SSOCallback />} />
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="deposits" element={<Deposits />} />
+              <Route path="withdrawals" element={<Withdrawals />} />
+              <Route path="transfers" element={<Transfers />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="analysis" element={<Analysis />} />
+              <Route path="automation" element={<Automation />} />
+              <Route path="markets" element={<Markets />} />
+              <Route path="platforms" element={<Platforms />} />
+              <Route path="refer" element={<Refer />} />
+            </Route>
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ClerkProvider>
 );
 
 export default App;
