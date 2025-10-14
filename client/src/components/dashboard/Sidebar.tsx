@@ -77,19 +77,23 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
     <aside
       ref={sidebarRef}
       className={cn(
-        "fixed left-0 top-0 z-20 h-screen border-r bg-card transition-all duration-300",
-        isOpen ? "w-64" : "w-16"
+        "bg-card transition-all duration-300 border-r h-full",
+        "md:fixed md:left-0 md:top-0 md:z-20 md:h-screen",
+        "w-full md:w-auto",
+        isOpen ? "md:w-64" : "md:w-16"
       )}
     >
       <div className="flex h-16 items-center border-b px-4">
         <div className="flex items-center gap-2">
+          <span className="text-2xl font-bold text-foreground md:hidden">Trade</span>
+          <span className="text-2xl font-bold text-primary md:hidden">Lite</span>
           {isOpen ? (
             <>
-              <span className="text-2xl font-bold text-foreground">Trade</span>
-              <span className="text-2xl font-bold text-primary">Lite</span>
+              <span className="hidden md:inline text-2xl font-bold text-foreground">Trade</span>
+              <span className="hidden md:inline text-2xl font-bold text-primary">Lite</span>
             </>
           ) : (
-            <span className="text-2xl font-bold text-primary">TL</span>
+            <span className="hidden md:inline text-2xl font-bold text-primary">TL</span>
           )}
         </div>
       </div>
