@@ -27,6 +27,7 @@ import AddLiveAccount from "./pages/AddLiveAccount";
 import AddDemoAccount from "./pages/AddDemoAccount";
 import AddWalletAccount from "./pages/AddWalletAccount";
 import DepositToAccount from "./pages/DepositToAccount";
+import LegalTerms from "./pages/LegalTerms";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="add-demo-account" element={<AddDemoAccount />} />
                 <Route path="add-wallet-account" element={<AddWalletAccount />} />
                 <Route path="deposit-to-account" element={<DepositToAccount />} />
+                <Route path="legal" element={<LegalTerms />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
