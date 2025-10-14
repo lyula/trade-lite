@@ -52,7 +52,7 @@ const Dashboard = () => {
           />
           <StatCard
             title="Total Deposits"
-            value="1,157.90 USD"
+            value="0.00 USD"
             icon={ArrowDownToLine}
             iconColor="text-success"
           />
@@ -61,7 +61,7 @@ const Dashboard = () => {
         <Card>
           <CardContent className="p-6">
             <div className="text-sm text-muted-foreground">Total Withdrawals</div>
-            <div className="text-2xl font-bold">656.75 USD</div>
+            <div className="text-2xl font-bold">0.00 USD</div>
           </CardContent>
         </Card>
       </div>
@@ -110,13 +110,6 @@ const Dashboard = () => {
         <div className="hidden rounded-lg bg-muted/50 p-4 md:block">
           <div className="grid grid-cols-[auto,1fr,auto,auto,auto,auto,auto,auto] gap-4 text-sm font-medium text-muted-foreground">
             <div>Account Details</div>
-            <div></div>
-            <div>Leverage</div>
-            <div>Equity</div>
-            <div>Balance</div>
-            <div>Margin</div>
-            <div>Platforms</div>
-            <div>Options</div>
           </div>
         </div>
 
