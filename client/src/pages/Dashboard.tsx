@@ -202,10 +202,12 @@ const Dashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Wallet Accounts</h2>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create Account
-          </Button>
+          <Link to="/dashboard/add-wallet-account">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create Account
+            </Button>
+          </Link>
         </div>
 
         <WalletCard
