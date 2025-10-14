@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Workflow,
   LineChart,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -31,11 +32,11 @@ const menuItems = [
   { name: "Withdrawals", icon: ArrowUpFromLine, path: "/dashboard/withdrawals", hasSubmenu: false },
   { name: "Transfers", icon: ArrowLeftRight, path: "/dashboard/transfers", hasSubmenu: false },
   { name: "Reports", icon: FileText, path: "/dashboard/reports", hasSubmenu: false },
-  { name: "Analysis", icon: TrendingUp, path: "/dashboard/analysis", hasSubmenu: false },
   { name: "Automation", icon: Workflow, path: "/dashboard/automation", hasSubmenu: false },
   { name: "Markets", icon: LineChart, path: "/dashboard/markets", hasSubmenu: false },
   { name: "Platforms", icon: Monitor, path: "/dashboard/platforms", hasSubmenu: false },
   { name: "Refer a Friend", icon: Gift, path: "/dashboard/refer", hasSubmenu: false },
+  { name: "Profile", icon: User, path: "/dashboard/profile", hasSubmenu: false },
 ];
 
 const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
@@ -105,7 +106,7 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
               to={item.path}
               onClick={(e) => {
                 if (item.hasSubmenu) {
-                  e.preventDefault();
+                  e.preventDefault(); // Prevent navigation only for submenu items
                   toggleSubmenu(item.name);
                 }
               }}

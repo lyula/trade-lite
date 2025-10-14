@@ -20,6 +20,8 @@ import Platforms from "./pages/Platforms";
 import Refer from "./pages/Refer";
 import SSOCallback from "./pages/SSOCallback";
 import { ClerkProvider } from "@clerk/clerk-react";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Profile from "./pages/Profile"; // Import the Profile component
 
 const queryClient = new QueryClient();
 
@@ -37,7 +39,14 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login/sso-callback" element={<SSOCallback />} />
-            <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<Dashboard />} />
               <Route path="deposits" element={<Deposits />} />
               <Route path="withdrawals" element={<Withdrawals />} />
@@ -48,6 +57,7 @@ const App = () => (
               <Route path="markets" element={<Markets />} />
               <Route path="platforms" element={<Platforms />} />
               <Route path="refer" element={<Refer />} />
+              <Route path="profile" element={<Profile />} /> {/* Add the Profile route */}
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
