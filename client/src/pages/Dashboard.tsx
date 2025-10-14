@@ -6,8 +6,11 @@ import AccountCard from "@/components/dashboard/AccountCard";
 import WalletCard from "@/components/dashboard/WalletCard";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { Badge } from "@/components/ui/badge";
+import { Link, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
       {/* Success Message */}
@@ -19,7 +22,9 @@ const Dashboard = () => {
               Join thousands of users using merchant trading bots on our platform. You can also lease your bot under shared splits for profits made.
             </p>
           </div>
-          <Button className="bg-primary hover:bg-primary/90">Explore Automation</Button>
+          <Link to="/dashboard/automation">
+            <Button className="bg-primary hover:bg-primary/90">Explore Automation</Button>
+          </Link>
         </CardContent>
       </Card>
 
@@ -64,6 +69,71 @@ const Dashboard = () => {
             <div className="text-2xl font-bold">0.00 USD</div>
           </CardContent>
         </Card>
+      </div>
+
+      
+      {/* Live Accounts */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Live Accounts</h2>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2"
+            onClick={() => navigate("/dashboard/add-live-account")}
+          >
+            <Plus className="h-4 w-4" />
+            Create Account
+          </Button>
+        </div>
+
+        {/* Summary Row */}
+        <Card className="bg-muted/30">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-[auto,1fr,auto,auto,auto,auto] md:items-center">
+              <Badge variant="secondary" className="bg-success/10 text-success w-fit">
+                USD
+              </Badge>
+              <span className="font-semibold">Total</span>
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <p className="text-xs text-muted-foreground">Equity</p>
+                  <p className="font-semibold">0.00</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Balance</p>
+                  <p className="font-semibold">0.00</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Margin</p>
+                  <p className="font-semibold">0.00</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Credit</p>
+                  <p className="font-semibold">0.00</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Account Details Header */}
+        <div className="hidden rounded-lg bg-muted/50 p-4 md:block">
+          <div className="grid grid-cols-[auto,1fr,auto,auto,auto,auto,auto,auto] gap-4 text-sm font-medium text-muted-foreground">
+            <div>Account Details</div>
+          </div>
+        </div>
+
+        <AccountCard
+          accountNumber="881564"
+          accountType="MT5 Standard"
+          currency="USD"
+          leverage="1:400"
+          equity="7,790.60"
+          balance="7,790.60"
+          margin="0.00"
+          platforms={["MT5", "WebTrader"]}
+        />
       </div>
 
       {/* Demo Accounts */}
@@ -124,6 +194,7 @@ const Dashboard = () => {
           platforms={["MT5", "WebTrader"]}
         />
       </div>
+
 
       {/* Wallet Accounts */}
       <div className="space-y-4">

@@ -1,7 +1,10 @@
 import { Card } from "@/components/ui/card";
-import { Bitcoin, TrendingUp, BarChart3, Coins } from "lucide-react";
+import { Bitcoin, TrendingUp, BarChart3, Coins, X } from "lucide-react";
+import { useState } from "react";
 
 const Markets = () => {
+  const [expanded, setExpanded] = useState(false);
+
   const markets = [
     {
       icon: Bitcoin,
@@ -33,6 +36,27 @@ const Markets = () => {
     },
   ];
 
+  if (expanded) {
+    return (
+      <div className="fixed inset-0 z-50 bg-background">
+        <button
+          className="absolute top-4 right-4 bg-card rounded-full p-2 shadow-lg hover:bg-primary/10 transition z-10"
+          onClick={() => setExpanded(false)}
+          aria-label="Collapse"
+        >
+          <X className="h-6 w-6 text-foreground" />
+        </button>
+        <div className="w-full h-full">
+          <iframe
+            src="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT&theme=dark"
+            className="w-full h-full border-0"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section id="markets" className="py-24 relative">
       <div className="container mx-auto px-4">
@@ -44,7 +68,12 @@ const Markets = () => {
             Diversify your portfolio across multiple asset classes with our comprehensive trading platform
           </p>
         </div>
-        
+        <button
+          className="absolute top-6 right-6 bg-primary text-white px-4 py-2 rounded-full shadow-lg hover:bg-primary/80 transition"
+          onClick={() => setExpanded(true)}
+        >
+          Expand Markets
+        </button>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {markets.map((market, index) => (
             <Card 
@@ -55,10 +84,8 @@ const Markets = () => {
               <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${market.gradient} p-3 mb-4 group-hover:scale-110 transition-transform`}>
                 <market.icon className="w-full h-full text-background" />
               </div>
-              
               <h3 className="text-xl font-bold mb-2 text-foreground">{market.title}</h3>
               <p className="text-muted-foreground mb-4">{market.description}</p>
-              
               <ul className="space-y-2">
                 {market.features.map((feature, idx) => (
                   <li key={idx} className="flex items-center gap-2 text-sm">

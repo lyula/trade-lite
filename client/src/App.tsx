@@ -22,6 +22,7 @@ import SSOCallback from "./pages/SSOCallback";
 import { ClerkProvider } from "@clerk/clerk-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Profile from "./pages/Profile"; // Import the Profile component
+import AddLiveAccount from "./pages/AddLiveAccount";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="platforms" element={<Platforms />} />
               <Route path="refer" element={<Refer />} />
               <Route path="profile" element={<Profile />} /> {/* Add the Profile route */}
+              <Route path="add-live-account" element={<AddLiveAccount />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
