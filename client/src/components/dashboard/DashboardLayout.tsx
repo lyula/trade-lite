@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Menu, ChevronDown, User, LogOut, X } from "lucide-react";
@@ -76,12 +76,12 @@ const DashboardLayout = () => {
             <PopoverContent align="end" className="w-48">
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="/dashboard/profile"
+                  <Link
+                    to="/dashboard/profile"
                     className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:bg-muted"
                   >
                     <User className="h-4 w-4" /> Profile
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <button
