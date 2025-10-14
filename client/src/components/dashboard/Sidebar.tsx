@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Wallet,
@@ -43,6 +43,7 @@ const menuItems = [
 const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const toggleSubmenu = (name: string) => {
     setExpandedItems((prev) =>
@@ -108,44 +109,67 @@ const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
       <nav className="space-y-1 p-2">
         {menuItems.map((item) => (
           <div key={item.name}>
-            <NavLink
-              to={item.path}
-              onClick={(e) => {
-                if (item.hasSubmenu) {
-                  e.preventDefault();
-                  toggleSubmenu(item.name);
-                }
-              }}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive && !item.hasSubmenu
+            {typeof window !== "undefined" && window.innerWidth < 768 && !item.hasSubmenu ? (
+              <button
+                type="button"
+                onClick={() => {
+                  navigate(item.path);
+                  if (onToggle) {
+                    setTimeout(() => {
+                      onToggle(false);
+                    }, 150);
+                  }
+                }}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left",
+                  location.pathname === item.path
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )
-              }
-            >
-              <item.icon className="h-5 w-5 flex-shrink-0" />
-              {isOpen && (
-                <>
-                  <span className="flex-1">{item.name}</span>
-                  {item.hasSubmenu && (
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 transition-transform",
-                        expandedItems.includes(item.name) && "rotate-180"
-                      )}
-                    />
-                  )}
-                  {item.name === "Dashboard" && (
-                    <ChevronLeft
-                      onClick={toggleSidebar} // Added toggle functionality
-                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
+                )}
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {isOpen && <span className="flex-1">{item.name}</span>}
+              </button>
+            ) : (
+              <NavLink
+                to={item.path}
+                onClick={(e) => {
+                  if (item.hasSubmenu) {
+                    e.preventDefault();
+                    toggleSubmenu(item.name);
+                  }
+                }}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    isActive && !item.hasSubmenu
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )
+                }
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {isOpen && (
+                  <>
+                    <span className="flex-1">{item.name}</span>
+                    {item.hasSubmenu && (
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
+                          expandedItems.includes(item.name) && "rotate-180"
+                        )}
+                      />
+                    )}
+                    {item.name === "Dashboard" && (
+                      <ChevronLeft
+                        onClick={toggleSidebar}
+                        className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
+                      />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            )}
           </div>
         ))}
       </nav>

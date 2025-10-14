@@ -9,6 +9,7 @@ const DepositToAccount = () => {
   const [depositAmount, setDepositAmount] = useState(50000);
   const [customAmount, setCustomAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const [phone, setPhone] = useState("");
 
   const handlePreset = (amount: number) => {
     setDepositAmount(amount);
@@ -21,11 +22,11 @@ const DepositToAccount = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-8 text-foreground">Fund Your Account Easily and Securely</h1>
-        <Card className="p-8">
-          <form className="space-y-8">
+    <div className="min-h-screen p-6">
+      <div className="w-full max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8 text-center text-foreground">Fund Your Account Easily and Securely</h1>
+        <form className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
             <div>
               <label className="block text-base font-semibold mb-2 text-foreground">Select an Account</label>
               <select
@@ -90,15 +91,25 @@ const DepositToAccount = () => {
               </div>
             </div>
             <div>
-              <span className="block text-sm text-muted-foreground mb-2">
-                TradeLite does not accept payments from numbers or cards not registered under your name. I confirm that my account name with TradeLite matches the name on my card or mobile number.
-              </span>
+              <label className="block text-base font-semibold mb-2 text-foreground">Phone Number</label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                placeholder="+254xxxxxxxxx"
+                className="w-full border rounded px-3 py-2 text-lg"
+                pattern="\+254[0-9]{9}"
+                maxLength={13}
+              />
             </div>
-            <Button type="button" className="w-full bg-teal-500 hover:bg-teal-600 text-lg py-2 rounded" onClick={handleContinue}>
-              Continue
+            <Button type="button" className="bg-teal-500 hover:bg-teal-600 text-lg py-2 rounded w-full mt-4" onClick={handleContinue}>
+              Initiate Deposit
             </Button>
-          </form>
-        </Card>
+            <span className="block text-sm text-muted-foreground text-center mt-4">
+              TradeLite does not accept payments from numbers or cards not registered under your name. I confirm that my account name with TradeLite matches the name on my card or mobile number.
+            </span>
+          </div>
+        </form>
       </div>
     </div>
   );
