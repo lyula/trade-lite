@@ -42,9 +42,9 @@ const Hero = () => {
                 variant="hero"
                 size="xl"
                 className="group"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
               >
-                Create Free Account
+                Create Your Account
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
@@ -52,7 +52,7 @@ const Hero = () => {
                 size="xl"
                 onClick={() => navigate("/login")}
               >
-                Explore Markets
+                View Demo Account
               </Button>
             </div>
             

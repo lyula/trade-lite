@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CTA = () => {
+  const navigate = useNavigate();
+
   const features = [
     "No account minimums",
     "Industry-leading security",
@@ -39,11 +42,20 @@ const CTA = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="xl" className="group">
+            <Button
+              variant="hero"
+              size="xl"
+              className="group"
+              onClick={() => navigate("/login")}
+            >
               Create Your Account
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" size="xl">
+            <Button
+              variant="outline"
+              size="xl"
+              onClick={() => navigate("/login")}
+            >
               View Demo Account
             </Button>
           </div>

@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto px-4 py-4">
@@ -44,10 +47,18 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/login")}
+            >
               Sign In
             </Button>
-            <Button variant="hero" size="sm">
+            <Button
+              variant="hero"
+              size="sm"
+              onClick={() => navigate("/register")}
+            >
               Get Started
             </Button>
           </div>
