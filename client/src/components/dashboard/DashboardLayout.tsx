@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarClose = () => {
     setSidebarOpen(false);
@@ -18,9 +18,11 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex min-h-screen w-full bg-background">
-      <Sidebar isOpen={sidebarOpen} onClose={handleSidebarClose} onExpand={handleSidebarExpand} />
-      
-      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-16'}`}>
+      <div className={`fixed inset-0 z-20 md:relative md:z-auto ${sidebarOpen ? "block" : "hidden"} md:block`}>
+        <Sidebar isOpen={sidebarOpen} onClose={handleSidebarClose} onExpand={handleSidebarExpand} />
+      </div>
+
+      <div className="flex-1">
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
           <Button
             variant="ghost"
