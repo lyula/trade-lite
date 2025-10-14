@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,10 +23,28 @@ const DashboardLayout = () => {
             <Menu className="h-5 w-5" />
           </Button>
           
-          <div className="ml-auto flex items-center gap-2 text-sm font-medium text-foreground">
-            <span>Mr Sacred Baraka Lyula</span>
-            <ChevronDown className="h-4 w-4" />
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="ml-auto flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
+                <span>Mr Sacred Baraka Lyula</span>
+                <ChevronDown className="h-4 w-4" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48">
+              <ul className="space-y-2">
+                <li>
+                  <a href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:bg-muted">
+                    <User className="h-4 w-4" /> Profile
+                  </a>
+                </li>
+                <li>
+                  <a href="/logout" className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:bg-muted">
+                    <LogOut className="h-4 w-4" /> Logout
+                  </a>
+                </li>
+              </ul>
+            </PopoverContent>
+          </Popover>
         </header>
         
         <main className="p-4 md:p-6">

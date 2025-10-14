@@ -16,11 +16,10 @@ const Dashboard = () => {
           <div className="flex items-start gap-3">
             <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-success" />
             <p className="text-sm">
-              You've successfully funded your account. Prepare yourself to start trading by choosing your preferred
-              trading platform.
+              Join thousands of users using merchant trading bots on our platform. You can also lease your bot under shared splits for profits made.
             </p>
           </div>
-          <Button className="bg-primary hover:bg-primary/90">Explore Platforms</Button>
+          <Button className="bg-primary hover:bg-primary/90">Explore Automation</Button>
         </CardContent>
       </Card>
 
