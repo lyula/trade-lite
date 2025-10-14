@@ -50,9 +50,9 @@ const Hero = () => {
               <Button
                 variant="premium"
                 size="xl"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/dashboard/automation")}
               >
-                View Demo Account
+                Explore Automations
               </Button>
             </div>
             

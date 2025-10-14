@@ -77,7 +77,7 @@ const DashboardLayout = () => {
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="/profile"
+                    href="/dashboard/profile"
                     className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:bg-muted"
                   >
                     <User className="h-4 w-4" /> Profile

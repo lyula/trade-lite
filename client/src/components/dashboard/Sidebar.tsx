@@ -29,8 +29,8 @@ interface SidebarProps {
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard", hasSubmenu: false },
-  { name: "Deposits", icon: ArrowDownToLine, path: "/dashboard/deposits", hasSubmenu: false },
-  { name: "Withdrawals", icon: ArrowUpFromLine, path: "/dashboard/withdrawals", hasSubmenu: false },
+  { name: "Deposits", icon: Wallet, path: "/dashboard/deposits", hasSubmenu: false },
+  { name: "Withdrawals", icon: Wallet, path: "/dashboard/withdrawals", hasSubmenu: false },
   { name: "Transfers", icon: ArrowLeftRight, path: "/dashboard/transfers", hasSubmenu: false },
   { name: "Reports", icon: FileText, path: "/dashboard/reports", hasSubmenu: false },
   { name: "Automation", icon: Workflow, path: "/dashboard/automation", hasSubmenu: false },
