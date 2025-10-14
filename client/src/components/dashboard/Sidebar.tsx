@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -10,6 +11,8 @@ import {
   Monitor,
   Gift,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Workflow,
   LineChart,
 } from "lucide-react";
@@ -18,6 +21,8 @@ import { useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
+  onClose: () => void;
+  onExpand: () => void;
 }
 
 const menuItems = [
@@ -33,17 +38,44 @@ const menuItems = [
   { name: "Refer a Friend", icon: Gift, path: "/dashboard/refer", hasSubmenu: false },
 ];
 
-const Sidebar = ({ isOpen }: SidebarProps) => {
+const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const toggleSubmenu = (name: string) => {
-    setExpandedItems(prev =>
-      prev.includes(name) ? prev.filter(item => item !== name) : [...prev, name]
+    setExpandedItems((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
     );
   };
 
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  const handleDrag = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+      document.addEventListener("touchmove", handleDrag);
+    } else {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchmove", handleDrag);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchmove", handleDrag);
+    };
+  }, [isOpen]);
+
   return (
     <aside
+      ref={sidebarRef}
       className={cn(
         "fixed left-0 top-0 z-20 h-screen border-r bg-card transition-all duration-300",
         isOpen ? "w-64" : "w-16"
@@ -51,8 +83,14 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
     >
       <div className="flex h-16 items-center border-b px-4">
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-foreground">Trade</span>
-          {isOpen && <span className="text-2xl font-bold text-primary">Lite</span>}
+          {isOpen ? (
+            <>
+              <span className="text-2xl font-bold text-foreground">Trade</span>
+              <span className="text-2xl font-bold text-primary">Lite</span>
+            </>
+          ) : (
+            <span className="text-2xl font-bold text-primary">TL</span>
+          )}
         </div>
       </div>
 
@@ -80,6 +118,12 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
               {isOpen && (
                 <>
                   <span className="flex-1">{item.name}</span>
+                  {item.name === "Dashboard" && (
+                    <ChevronLeft
+                      onClick={onClose}
+                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
+                    />
+                  )}
                   {item.hasSubmenu && (
                     <ChevronDown
                       className={cn(
@@ -95,16 +139,23 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
         ))}
       </nav>
 
-      {isOpen && (
-        <div className="absolute bottom-0 w-full border-t p-4">
+      <div className="absolute bottom-0 w-full border-t p-4">
+        {isOpen ? (
           <NavLink
             to="/dashboard/legal"
             className="text-sm font-medium text-primary hover:underline"
           >
             Legal Terms and Policies
           </NavLink>
-        </div>
-      )}
+        ) : (
+          <button
+            onClick={onExpand}
+            className="flex items-center justify-center w-full p-2 text-primary hover:bg-muted"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        )}
+      </div>
     </aside>
   );
 };

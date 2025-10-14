@@ -8,9 +8,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+  };
+
+  const handleSidebarExpand = () => {
+    setSidebarOpen(true);
+  };
+
   return (
     <div className="flex min-h-screen w-full bg-background">
-      <Sidebar isOpen={sidebarOpen} />
+      <Sidebar isOpen={sidebarOpen} onClose={handleSidebarClose} onExpand={handleSidebarExpand} />
       
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-16'}`}>
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
