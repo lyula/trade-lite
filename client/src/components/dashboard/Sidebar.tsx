@@ -58,9 +58,12 @@ const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
   };
 
   const handleOutsideClick = (event: MouseEvent) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-      if (onToggle) {
-        onToggle(false);
+    // Only collapse on outside click for mobile view (screen width < 768px)
+    if (window.innerWidth < 768) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        if (onToggle) {
+          onToggle(false);
+        }
       }
     }
   };
