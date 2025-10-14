@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useUser, useAuth } from "@clerk/clerk-react";
 
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
   const navigate = useNavigate();
   const { user } = useUser();
   const { signOut } = useAuth();
@@ -19,6 +19,10 @@ const DashboardLayout = () => {
 
   const handleSidebarExpand = () => {
     setSidebarOpen(true);
+  };
+
+  const handleSidebarToggle = (isOpen: boolean) => {
+    setSidebarOpen(isOpen);
   };
 
   const handleLogout = async () => {
@@ -35,15 +39,16 @@ const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen w-full bg-background">
       {/* Sidebar - hidden on mobile, always visible on desktop */}
-      <div className="hidden md:block">
+      <div className="hidden md:block md:fixed md:inset-y-0 md:left-0 md:z-20">
         <Sidebar
           isOpen={sidebarOpen}
           onClose={handleSidebarClose}
           onExpand={handleSidebarExpand}
+          onToggle={handleSidebarToggle}
         />
       </div>
 
-      <div className={`flex-1 w-full md:w-auto ${sidebarOpen ? "md:ml-64" : "md:ml-16"}`}>
+      <div className={`flex-1 w-full transition-all duration-300 ${sidebarOpen ? "md:ml-48" : "md:ml-16"}`}>
         {/* Header */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
           <Button

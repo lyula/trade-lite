@@ -24,6 +24,7 @@ interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   onExpand: () => void;
+  onToggle?: (isOpen: boolean) => void;
 }
 
 const menuItems = [
@@ -39,7 +40,7 @@ const menuItems = [
   { name: "Profile", icon: User, path: "/dashboard/profile", hasSubmenu: false },
 ];
 
-const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
+const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -49,28 +50,30 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
     );
   };
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-      onClose();
+  const toggleSidebar = () => {
+    const newState = !isOpen;
+    if (onToggle) {
+      onToggle(newState);
     }
   };
 
-  const handleDrag = () => {
-    onClose();
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (onToggle) {
+        onToggle(false);
+      }
+    }
   };
 
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleOutsideClick);
-      document.addEventListener("touchmove", handleDrag);
     } else {
       document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("touchmove", handleDrag);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("touchmove", handleDrag);
     };
   }, [isOpen]);
 
@@ -78,10 +81,10 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
     <aside
       ref={sidebarRef}
       className={cn(
-        "bg-card transition-all duration-300 border-r h-full",
-        "md:fixed md:left-0 md:top-0 md:z-20 md:h-screen",
+        "bg-card transition-all duration-300 border-r",
+        "h-screen overflow-y-auto",
         "w-full md:w-auto",
-        isOpen ? "md:w-64" : "md:w-16"
+        isOpen ? "md:w-48" : "md:w-16"
       )}
     >
       <div className="flex h-16 items-center border-b px-4">
@@ -106,7 +109,7 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
               to={item.path}
               onClick={(e) => {
                 if (item.hasSubmenu) {
-                  e.preventDefault(); // Prevent navigation only for submenu items
+                  e.preventDefault();
                   toggleSubmenu(item.name);
                 }
               }}
@@ -123,18 +126,18 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
               {isOpen && (
                 <>
                   <span className="flex-1">{item.name}</span>
-                  {item.name === "Dashboard" && (
-                    <ChevronLeft
-                      onClick={onClose}
-                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
-                    />
-                  )}
                   {item.hasSubmenu && (
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform",
                         expandedItems.includes(item.name) && "rotate-180"
                       )}
+                    />
+                  )}
+                  {item.name === "Dashboard" && (
+                    <ChevronLeft
+                      onClick={toggleSidebar} // Added toggle functionality
+                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
                     />
                   )}
                 </>
@@ -154,7 +157,7 @@ const Sidebar = ({ isOpen, onClose, onExpand }: SidebarProps) => {
           </NavLink>
         ) : (
           <button
-            onClick={onExpand}
+            onClick={toggleSidebar}
             className="flex items-center justify-center w-full p-2 text-primary hover:bg-muted"
           >
             <ChevronRight className="h-5 w-5" />
