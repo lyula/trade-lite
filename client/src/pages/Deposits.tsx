@@ -11,10 +11,12 @@ const Deposits = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Deposits</h1>
-        <Button className="gap-2">
-          <ArrowDownToLine className="h-4 w-4" />
-          New Deposit
-        </Button>
+        <Link to="/dashboard/deposit-to-account">
+          <Button className="gap-2">
+            <ArrowDownToLine className="h-4 w-4" />
+            New Deposit
+          </Button>
+        </Link>
       </div>
 
       {/* Payment Logos Row */}
@@ -39,13 +41,7 @@ const Deposits = () => {
         </div>
       </div>
 
-      <div className="mb-4 flex justify-end">
-        <Link to="/dashboard/deposit-to-account">
-          <Button className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-2 rounded">
-            Deposit
-          </Button>
-        </Link>
-      </div>
+
 
       <Card>
         <CardHeader>

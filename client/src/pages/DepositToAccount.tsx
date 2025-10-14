@@ -8,7 +8,7 @@ const DepositToAccount = () => {
   const [selectedAccount, setSelectedAccount] = useState("W-0961795-002 Wallet (KES 0.0000)");
   const [depositAmount, setDepositAmount] = useState(50000);
   const [customAmount, setCustomAmount] = useState("");
-  const [currency, setCurrency] = useState("KES");
+  const [currency, setCurrency] = useState("USD");
 
   const handlePreset = (amount: number) => {
     setDepositAmount(amount);
@@ -38,6 +38,17 @@ const DepositToAccount = () => {
               </select>
             </div>
             <div>
+              <label className="block text-base font-semibold mb-2 text-foreground">Currency</label>
+              <select
+                value={currency}
+                onChange={e => setCurrency(e.target.value)}
+                className="w-full border rounded px-3 py-2 text-lg mb-6"
+              >
+                <option value="USD">USD</option>
+                <option value="KES">KES</option>
+              </select>
+            </div>
+            <div>
               <label className="block text-base font-semibold mb-2 text-foreground">Deposit Amount</label>
               <div className="flex gap-4 mb-2">
                 {[50000, 70000, 100000].map(amount => (
@@ -48,7 +59,7 @@ const DepositToAccount = () => {
                     className="min-w-[120px]"
                     onClick={() => handlePreset(amount)}
                   >
-                    KES {amount.toLocaleString()}
+                    {currency} {amount.toLocaleString()}
                   </Button>
                 ))}
               </div>
@@ -61,9 +72,8 @@ const DepositToAccount = () => {
                   onChange={e => setCurrency(e.target.value)}
                   className="border rounded px-3 py-2 text-lg"
                 >
-                  <option value="KES">KES</option>
                   <option value="USD">USD</option>
-                  <option value="GBP">GBP</option>
+                  <option value="KES">KES</option>
                 </select>
                 <input
                   type="number"
@@ -74,7 +84,7 @@ const DepositToAccount = () => {
                     setCustomAmount(e.target.value);
                     setDepositAmount(0);
                   }}
-                  placeholder="0.00"
+                  placeholder={`0.00`}
                   className="border rounded px-3 py-2 text-lg w-full"
                 />
               </div>
