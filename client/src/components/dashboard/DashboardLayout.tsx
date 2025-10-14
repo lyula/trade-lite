@@ -42,7 +42,13 @@ const DashboardLayout = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={() => {
+              if (sidebarOpen) {
+                setSidebarOpen(false);
+              } else {
+                setSidebarOpen(true);
+              }
+            }}
             className="md:hidden"
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

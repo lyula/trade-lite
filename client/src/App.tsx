@@ -18,6 +18,7 @@ import Automation from "./pages/Automation";
 import Markets from "./pages/Markets";
 import Platforms from "./pages/Platforms";
 import Refer from "./pages/Refer";
+import SSOCallback from "./pages/SSOCallback";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login/sso-callback" element={<SSOCallback />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="deposits" element={<Deposits />} />
