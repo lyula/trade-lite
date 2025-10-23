@@ -9,18 +9,4 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.createOrSyncUser = async (req, res) => {
-  const { clerkId, firstName, lastName } = req.body;
-  if (!clerkId || !firstName || !lastName) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-  try {
-    let user = await User.findOne({ clerkId });
-    if (!user) {
-      user = await User.create({ clerkId, firstName, lastName });
-    }
-    return res.status(201).json(user);
-  } catch (err) {
-    return res.status(500).json({ error: 'Server error', details: err.message });
-  }
-};
+
