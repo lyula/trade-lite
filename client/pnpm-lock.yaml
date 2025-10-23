@@ -164,6 +164,9 @@ importers:
       zod:
         specifier: ^3.25.76
         version: 3.25.76
+      zxcvbn:
+        specifier: ^4.4.2
+        version: 4.4.2
     devDependencies:
       '@eslint/js':
         specifier: ^9.32.0
@@ -3078,6 +3081,9 @@ packages:
       use-sync-external-store:
         optional: true
 
+  zxcvbn@4.4.2:
+    resolution: {integrity: sha512-Bq0B+ixT/DMyG8kgX2xWcI5jUvCwqrMxSFam7m0lAf78nf04hv6lNCsyLYdyYTrCVMqNDY/206K7eExYCeSyUQ==}
+
 snapshots:
 
   '@adraffy/ens-normalize@1.11.1': {}
@@ -5876,3 +5882,5 @@ snapshots:
       '@types/react': 18.3.26
       react: 18.3.1
       use-sync-external-store: 1.6.0(react@18.3.1)
+
+  zxcvbn@4.4.2: {}

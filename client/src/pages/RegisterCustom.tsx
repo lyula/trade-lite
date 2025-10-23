@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import zxcvbn from "zxcvbn";
 
 const RegisterCustom = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,6 +14,7 @@ const RegisterCustom = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,21 @@ const RegisterCustom = () => {
       confirmPassword
     );
   };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    const strength = zxcvbn(newPassword).score;
+    setPasswordStrength(strength);
+  };
+
+  const strengthColors = [
+    "text-red-500",
+    "text-orange-500",
+    "text-yellow-500",
+    "text-green-500",
+    "text-green-700",
+  ];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -119,7 +136,7 @@ const RegisterCustom = () => {
               <Input
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 placeholder="Enter your password"
                 required
                 className="w-full border rounded px-3 py-2"
@@ -131,6 +148,10 @@ const RegisterCustom = () => {
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
+            </div>
+            <div className={`mt-2 text-sm ${strengthColors[passwordStrength]}`}>
+              Password Strength:{" "}
+              {["Weak", "Fair", "Good", "Strong", "Very Strong"][passwordStrength]}
             </div>
           </div>
 
