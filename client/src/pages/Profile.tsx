@@ -1,7 +1,9 @@
 
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
+import { createOrSyncUser } from "../services/userApi";
 
 const Profile: React.FC = () => {
   const { user } = useUser();
@@ -15,6 +17,19 @@ const Profile: React.FC = () => {
   const [idFront, setIdFront] = useState<File | null>(null);
   const [idBack, setIdBack] = useState<File | null>(null);
   const [kraCert, setKraCert] = useState<File | null>(null);
+
+
+  useEffect(() => {
+    if (user) {
+        createOrSyncUser(user.id, user.firstName, user.lastName)
+          .then((res) => {
+            console.log("User synced to backend:", res.data);
+          })
+          .catch((err) => {
+            console.error("Error syncing user to backend:", err?.response?.data || err.message);
+          });
+    }
+  }, [user]);
 
   if (!user) {
     return <div>Loading...</div>;

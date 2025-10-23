@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ArrowLeftRight, ArrowUpFromLine } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface WalletCardProps {
   currency: string;
@@ -11,9 +12,10 @@ interface WalletCardProps {
 }
 
 const WalletCard = ({ currency, accountNumber, balance, currencyColor = "success" }: WalletCardProps) => {
-  const badgeClass = currencyColor === "warning" 
-    ? "bg-warning/10 text-warning border-warning/20" 
+  const badgeClass = currencyColor === "warning"
+    ? "bg-warning/10 text-warning border-warning/20"
     : "bg-success/10 text-success border-success/20";
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -33,15 +35,15 @@ const WalletCard = ({ currency, accountNumber, balance, currencyColor = "success
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/deposits") }>
                 <ArrowDownToLine className="h-4 w-4" />
                 Deposit
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/transfers") }>
                 <ArrowLeftRight className="h-4 w-4" />
                 Transfer
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/withdrawals") }>
                 <ArrowUpFromLine className="h-4 w-4" />
                 Withdraw
               </Button>
