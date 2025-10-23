@@ -8,7 +8,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useUserContext } from "@/context/UserContext";
 
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
+  // Sidebar open state: open by default on desktop, closed by default on mobile
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth >= 768; // md breakpoint
+    }
+    return false;
+  });
+
   const [popoverOpen, setPopoverOpen] = useState(false); // Control popover state
   const { user, clearUser } = useUserContext();
 
