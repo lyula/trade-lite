@@ -5,8 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import LoginCustom from "./pages/LoginCustom";
+import RegisterCustom from "./pages/RegisterCustom";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -23,6 +23,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Profile from "./pages/Profile"; // Import the Profile component
 import WithdrawFromAccount from "./pages/WithdrawFromAccount";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 import AddLiveAccount from "./pages/AddLiveAccount";
 import AddDemoAccount from "./pages/AddDemoAccount";
@@ -44,8 +45,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<LoginCustom />} />
+            <Route path="/register" element={<RegisterCustom />} />
             <Route path="/login/sso-callback" element={<SSOCallback />} />
             <Route
               path="/dashboard"
@@ -68,12 +69,13 @@ const App = () => (
               <Route path="profile" element={<Profile />} /> {/* Add the Profile route */}
               <Route path="add-live-account" element={<AddLiveAccount />} />
               <Route path="add-demo-account" element={<AddDemoAccount />} />
-                <Route path="add-wallet-account" element={<AddWalletAccount />} />
-                <Route path="deposit-to-account" element={<DepositToAccount />} />
-                <Route path="legal" element={<LegalTerms />} />
+              <Route path="add-wallet-account" element={<AddWalletAccount />} />
+              <Route path="deposit-to-account" element={<DepositToAccount />} />
+              <Route path="legal" element={<LegalTerms />} />
               <Route path="transfer-funds" element={<TransferFunds />} />
               <Route path="withdraw-from-account" element={<WithdrawFromAccount />} />
             </Route>
+            <Route path="/terms" element={<TermsAndConditions />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
