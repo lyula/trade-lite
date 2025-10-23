@@ -1,13 +1,11 @@
-
-
 import React, { useState, useEffect } from "react";
-import { User } from "lucide-react";
-import { useUser } from "@clerk/clerk-react";
+import { User as UserIcon } from "lucide-react";
+import { useUserContext } from "@/context/UserContext";
 import { createOrSyncUser } from "../services/userApi";
 
 const Profile: React.FC = () => {
-  const { user } = useUser();
-  const [email, setEmail] = useState(user?.emailAddresses[0]?.emailAddress || "");
+  const { user } = useUserContext();
+  const [email, setEmail] = useState(user?.email || "");
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [saving, setSaving] = useState(false);
@@ -17,7 +15,6 @@ const Profile: React.FC = () => {
   const [idFront, setIdFront] = useState<File | null>(null);
   const [idBack, setIdBack] = useState<File | null>(null);
   const [kraCert, setKraCert] = useState<File | null>(null);
-
 
   useEffect(() => {
     if (user) {
@@ -38,16 +35,10 @@ const Profile: React.FC = () => {
   return (
     <div className="space-y-8 p-6">
       <h1 className="text-3xl font-bold mb-2">Account Settings</h1>
-      <div className="flex items-center gap-6 mb-6">
-        {user.imageUrl ? (
-          <img src={user.imageUrl} alt="Profile" className="w-20 h-20 rounded-full object-cover border" />
-        ) : (
-          <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-            <User className="h-10 w-10 text-gray-400" />
-          </div>
-        )}
+      <div className="flex items-center gap-4">
+        <UserIcon className="h-10 w-10 text-muted-foreground" />
         <div>
-          <div className="text-lg font-semibold">{user.firstName} {user.lastName}</div>
+          <div className="text-xl font-semibold">{firstName} {lastName}</div>
           <div className="text-muted-foreground">{email}</div>
         </div>
       </div>

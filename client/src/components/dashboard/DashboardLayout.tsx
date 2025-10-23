@@ -35,6 +35,8 @@ const DashboardLayout = () => {
 
   const handleLogout = async () => {
     clearUser();
+    localStorage.clear(); // Clear all localStorage data
+    sessionStorage.clear(); // Clear all sessionStorage data
     navigate("/");
     setPopoverOpen(false);
   };
