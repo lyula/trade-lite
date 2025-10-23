@@ -1,3 +1,5 @@
+import CreateWallet from "./pages/CreateWallet";
+import CreateAccount from "./pages/CreateAccount";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -72,6 +74,8 @@ const App = () => (
               <Route path="legal" element={<LegalTerms />} />
               <Route path="transfer-funds" element={<TransferFunds />} />
               <Route path="withdraw-from-account" element={<WithdrawFromAccount />} />
+              <Route path="create-account" element={<CreateAccount />} />
+              <Route path="create-wallet" element={<CreateWallet />} />
             </Route>
             <Route path="/terms" element={<TermsAndConditions />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

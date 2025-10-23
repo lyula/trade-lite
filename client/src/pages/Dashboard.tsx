@@ -7,6 +7,8 @@ import WalletCard from "@/components/dashboard/WalletCard";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -80,11 +82,12 @@ const Dashboard = () => {
             variant="outline" 
             size="sm" 
             className="gap-2"
-            onClick={() => navigate("/dashboard/add-live-account")}
+            onClick={() => navigate("/dashboard/create-account?type=live")}
           >
             <Plus className="h-4 w-4" />
             Create Account
           </Button>
+
         </div>
 
         {/* Summary Row */}
@@ -132,12 +135,15 @@ const Dashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Demo Accounts</h2>
-          <Link to="/dashboard/add-demo-account">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Plus className="h-4 w-4" />
-              Create Account
-            </Button>
-          </Link>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2"
+            onClick={() => navigate("/dashboard/create-account?type=demo")}
+          >
+            <Plus className="h-4 w-4" />
+            Create Account
+          </Button>
         </div>
 
         {/* Summary Row */}
@@ -186,12 +192,15 @@ const Dashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Wallet Accounts</h2>
-          <Link to="/dashboard/add-wallet-account">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Plus className="h-4 w-4" />
-              Create Account
-            </Button>
-          </Link>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2"
+            onClick={() => navigate("/dashboard/create-wallet")}
+          >
+            <Plus className="h-4 w-4" />
+            Create Account
+          </Button>
         </div>
 
         {/* No wallet accounts by default */}
