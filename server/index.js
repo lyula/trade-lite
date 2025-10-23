@@ -6,7 +6,13 @@ const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://tradelite.vercel.app",
+    "http://localhost:8080"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // User routes
