@@ -48,8 +48,8 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                <a href="mailto:support@tradepro.com" className="text-muted-foreground hover:text-accent transition-colors">
-                  support@tradepro.com
+                <a href="mailto:support@TradeLite.com" className="text-muted-foreground hover:text-accent transition-colors">
+                  support@TradeLite.com
                 </a>
               </li>
               <li className="flex items-start gap-2">
