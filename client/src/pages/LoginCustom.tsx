@@ -12,6 +12,7 @@ const LoginCustom = () => {
   const [customError, setCustomError] = useState("");
   const navigate = useNavigate();
   const { setUser } = useUserContext();
+  const [loading, setLoading] = useState(false);
 
   const CustomToast = ({ message }: { message: string }) => (
     <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-md">
@@ -21,12 +22,11 @@ const LoginCustom = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!email || !password) {
       setCustomError("All fields are required.");
       return;
     }
-
+    setLoading(true);
     try {
       const credentials = { email, password };
       const response = await loginUser(credentials);
@@ -39,6 +39,7 @@ const LoginCustom = () => {
         error.response?.data?.message || "Login failed. Please try again."
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -84,8 +85,18 @@ const LoginCustom = () => {
             </a>
           </div>
 
-          <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded">
-            Continue
+          <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded" disabled={loading}>
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Loading...
+              </span>
+            ) : (
+              "Continue"
+            )}
           </Button>
         </form>
 
