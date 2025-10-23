@@ -9,6 +9,8 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
+  const [popoverOpen, setPopoverOpen] = useState(false); // Control popover state
+
   const navigate = useNavigate();
   const { user } = useUser();
   const { signOut } = useAuth();
@@ -34,6 +36,9 @@ const DashboardLayout = () => {
 
     // Redirect to the landing page
     navigate("/");
+
+    // Close the popover
+    setPopoverOpen(false);
   };
 
   return (
@@ -66,7 +71,7 @@ const DashboardLayout = () => {
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
 
-          <Popover>
+          <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
               <div className="ml-auto flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
                 <span>{`${user?.firstName || "User"} ${user?.lastName || ""}`.trim()}</span>
@@ -78,6 +83,7 @@ const DashboardLayout = () => {
                 <li>
                   <Link
                     to="/dashboard/profile"
+                    onClick={() => setPopoverOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:bg-muted"
                   >
                     <User className="h-4 w-4" /> Profile
