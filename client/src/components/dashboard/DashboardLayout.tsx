@@ -104,6 +104,7 @@ const DashboardLayout = () => {
                 isOpen={sidebarOpen}
                 onClose={handleSidebarClose}
                 onExpand={handleSidebarExpand}
+                onToggle={handleSidebarToggle}
               />
             </div>
           </div>

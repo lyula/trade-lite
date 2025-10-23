@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -42,7 +41,6 @@ const menuItems = [
 
 const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const sidebarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const toggleSubmenu = (name: string) => {
@@ -58,32 +56,10 @@ const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
     }
   };
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    // Only collapse on outside click for mobile view (screen width < 768px)
-    if (window.innerWidth < 768) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-        if (onToggle) {
-          onToggle(false);
-        }
-      }
-    }
-  };
 
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    } else {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isOpen]);
 
   return (
     <aside
-      ref={sidebarRef}
       className={cn(
         "bg-card transition-all duration-300 border-r",
         "h-screen overflow-y-auto",
@@ -109,67 +85,48 @@ const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
       <nav className="space-y-1 p-2">
         {menuItems.map((item) => (
           <div key={item.name}>
-            {typeof window !== "undefined" && window.innerWidth < 768 && !item.hasSubmenu ? (
-              <button
-                type="button"
-                onClick={() => {
-                  navigate(item.path);
-                  if (onToggle) {
-                    setTimeout(() => {
-                      onToggle(false);
-                    }, 150);
-                  }
-                }}
-                className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left",
-                  location.pathname === item.path
+            <NavLink
+              to={item.path}
+              onClick={e => {
+                if (item.hasSubmenu) {
+                  e.preventDefault();
+                  toggleSubmenu(item.name);
+                  return;
+                }
+                if (typeof window !== "undefined" && window.innerWidth < 768 && onToggle) {
+                  onToggle(false);
+                }
+              }}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left w-full",
+                  isActive && !item.hasSubmenu
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {isOpen && <span className="flex-1">{item.name}</span>}
-              </button>
-            ) : (
-              <NavLink
-                to={item.path}
-                onClick={(e) => {
-                  if (item.hasSubmenu) {
-                    e.preventDefault();
-                    toggleSubmenu(item.name);
-                  }
-                }}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    isActive && !item.hasSubmenu
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )
-                }
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {isOpen && (
-                  <>
-                    <span className="flex-1">{item.name}</span>
-                    {item.hasSubmenu && (
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          expandedItems.includes(item.name) && "rotate-180"
-                        )}
-                      />
-                    )}
-                    {item.name === "Dashboard" && (
-                      <ChevronLeft
-                        onClick={toggleSidebar}
-                        className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
-            )}
+                )
+              }
+            >
+              <item.icon className="h-5 w-5 flex-shrink-0" />
+              {isOpen && (
+                <>
+                  <span className="flex-1">{item.name}</span>
+                  {item.hasSubmenu && (
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform",
+                        expandedItems.includes(item.name) && "rotate-180"
+                      )}
+                    />
+                  )}
+                  {item.name === "Dashboard" && (
+                    <ChevronLeft
+                      onClick={toggleSidebar}
+                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
+                    />
+                  )}
+                </>
+              )}
+            </NavLink>
           </div>
         ))}
       </nav>
