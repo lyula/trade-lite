@@ -31,9 +31,9 @@ const CreateAccountPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 px-2 sm:px-4 md:px-0">
+  <div className="space-y-6 px-2 sm:px-4 md:px-0 flex flex-col items-center">
       <h1 className="text-3xl font-bold text-center">Create Account</h1>
-      <Card className="mx-auto w-full max-w-2xl">
+  <Card className="w-full max-w-2xl sm:mx-auto">
         <CardHeader>
           <CardTitle>{typeLabels[typeParam]} Details</CardTitle>
         </CardHeader>

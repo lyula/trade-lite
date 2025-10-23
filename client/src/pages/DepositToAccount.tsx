@@ -49,13 +49,13 @@ const DepositToAccount = () => {
 
             <div>
               <label className="block text-sm font-medium">Deposit Amount</label>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-2 mb-2">
                 {[50000, 70000, 100000].map((amount) => (
                   <Button
                     key={amount}
                     type="button"
                     variant={depositAmount === amount ? "default" : "outline"}
-                    className="min-w-[120px]"
+                    className="min-w-[120px] rounded-sm"
                     onClick={() => setDepositAmount(amount)}
                   >
                     {currency} {amount.toLocaleString()}
