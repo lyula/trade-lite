@@ -194,19 +194,8 @@ const Dashboard = () => {
           </Link>
         </div>
 
-        <WalletCard
-          currency="USD"
-          accountNumber="W-0961795-001"
-          balance="0.000"
-          currencyColor="success"
-        />
-
-        <WalletCard
-          currency="KES"
-          accountNumber="W-0961795-002"
-          balance="0.000"
-          currencyColor="warning"
-        />
+        {/* No wallet accounts by default */}
+        <div className="text-center text-muted-foreground py-6">No wallet account yet.</div>
       </div>
 
       {/* Recent Activity */}
