@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Gift, Copy } from "lucide-react";
 import { useUserContext } from "@/context/UserContext";
+import { useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 const Refer = () => {
   const { user } = useUserContext();
+  const [copied, setCopied] = useState(false);
   const siteUrl = "https://tradelite.vercel.app";
   const referralLink = user ? `${siteUrl}/register?ref=${user.referralCode}` : "";
 
@@ -13,11 +16,14 @@ const Refer = () => {
   const handleCopy = () => {
     if (referralLink) {
       navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
   return (
     <div className="space-y-6">
+      <Toaster />
       <h1 className="text-3xl font-bold">Refer a Friend</h1>
 
       <Card>
@@ -37,6 +43,11 @@ const Refer = () => {
               <Copy className="h-4 w-4" />
             </Button>
           </div>
+          {copied && (
+            <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-md z-50">
+              Referral link copied to clipboard!
+            </div>
+          )}
           <div className="rounded-lg bg-muted p-4">
             <h3 className="font-semibold mb-2">How it works:</h3>
             <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
