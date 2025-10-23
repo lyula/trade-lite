@@ -22,6 +22,7 @@ import SSOCallback from "./pages/SSOCallback";
 import { ClerkProvider } from "@clerk/clerk-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Profile from "./pages/Profile"; // Import the Profile component
+import WithdrawFromAccount from "./pages/WithdrawFromAccount";
 
 import AddLiveAccount from "./pages/AddLiveAccount";
 import AddDemoAccount from "./pages/AddDemoAccount";
@@ -71,6 +72,7 @@ const App = () => (
                 <Route path="deposit-to-account" element={<DepositToAccount />} />
                 <Route path="legal" element={<LegalTerms />} />
               <Route path="transfer-funds" element={<TransferFunds />} />
+              <Route path="withdraw-from-account" element={<WithdrawFromAccount />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
