@@ -124,16 +124,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <AccountCard
-          accountNumber="881564"
-          accountType="MT5 Standard"
-          currency="USD"
-          leverage="1:400"
-          equity="7,790.60"
-          balance="7,790.60"
-          margin="0.00"
-          platforms={["MT5", "WebTrader"]}
-        />
+        {/* No live accounts by default */}
+        <div className="text-center text-muted-foreground py-6">No live accounts yet.</div>
       </div>
 
       {/* Demo Accounts */}
@@ -185,16 +177,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <AccountCard
-          accountNumber="881564"
-          accountType="MT5 Standard"
-          currency="USD"
-          leverage="1:400"
-          equity="7,790.60"
-          balance="7,790.60"
-          margin="0.00"
-          platforms={["MT5", "WebTrader"]}
-        />
+        {/* No demo accounts by default */}
+        <div className="text-center text-muted-foreground py-6">No demo accounts yet.</div>
       </div>
 
 
@@ -229,23 +213,12 @@ const Dashboard = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Recent Activity</CardTitle>
-          <Button variant="link" className="text-primary">
-            View More
-          </Button>
+          {/* Hide View More if no activity */}
         </CardHeader>
         <CardContent className="space-y-0">
-          <ActivityItem
-            date="22/05/2025 15:55"
-            description="Withdrawal of 664 KES from account"
-            accountNumber="9257827"
-            status="Accepted"
-          />
-          <ActivityItem
-            date="21/05/2025 23:34"
-            description="Deposit of 1314 KES has been added to"
-            accountNumber="9257827"
-            status="Accepted"
-          />
+          <div className="text-center text-muted-foreground py-6">
+            No recent activity yet.
+          </div>
         </CardContent>
       </Card>
     </div>
