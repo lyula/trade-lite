@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import zxcvbn from "zxcvbn";
+import { registerUser } from "@/services/userApi";
+import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const RegisterCustom = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,21 +18,50 @@ const RegisterCustom = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [customError, setCustomError] = useState("");
+  const [customSuccess, setCustomSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add registration logic here
-    console.log(
-      "Registering with",
-      firstName,
-      lastName,
-      gender,
-      email,
-      city,
-      phone,
-      password,
-      confirmPassword
-    );
+
+    if (
+      !firstName ||
+      !lastName ||
+      !gender ||
+      !email ||
+      !city ||
+      !phone ||
+      !password ||
+      !confirmPassword
+    ) {
+      setCustomError("All fields are required.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setCustomError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const userData = {
+        firstName,
+        lastName,
+        gender,
+        email,
+        city,
+        phone,
+        password,
+      };
+      await registerUser(userData);
+      setCustomSuccess("Registration successful!");
+    } catch (error) {
+      setCustomError(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +79,46 @@ const RegisterCustom = () => {
     "text-green-700",
   ];
 
+  const CustomToast = ({
+    message,
+    type,
+  }: {
+    message: string;
+    type: "success" | "error";
+  }) => (
+    <div
+      className={`fixed bottom-4 right-4 px-4 py-2 rounded shadow-md text-white ${
+        type === "success" ? "bg-green-500" : "bg-red-500"
+      }`}
+    >
+      {message}
+    </div>
+  );
+
+  useEffect(() => {
+    if (customError || customSuccess) {
+      const timer = setTimeout(() => {
+        setCustomError("");
+        setCustomSuccess("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [customError, customSuccess]);
+
+  useEffect(() => {
+    if (customSuccess) {
+      const timer = setTimeout(() => {
+        setCustomSuccess("");
+        navigate("/login");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [customSuccess]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {customError && <CustomToast message={customError} type="error" />}
+      {customSuccess && <CustomToast message={customSuccess} type="success" />}
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-center mb-6">
           Create Your Account
@@ -183,13 +253,13 @@ const RegisterCustom = () => {
               className="mr-2"
             />
             <span className="text-sm text-gray-600">
-              I agree to the{" "}
+              I agree to the {" "}
               <a
                 href="/terms"
                 className="text-teal-500 hover:underline"
               >
                 Terms and Conditions
-              </a>
+              </a>.
             </span>
           </div>
 

@@ -38,6 +38,11 @@ const TermsAndConditions = () => {
           We may update these terms from time to time. Continued use of the platform constitutes acceptance of the updated terms.
         </p>
 
+        <h2 className="text-xl font-semibold mb-2">7. Legal Age Requirement</h2>
+        <p className="mb-4">
+          By using our platform, you confirm that you are at least 18 years old. Users under the age of 18 are not permitted to create an account or use our services.
+        </p>
+
         <p className="mt-6">
           If you have any questions about these terms, please contact our support team.
         </p>
