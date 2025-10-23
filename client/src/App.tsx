@@ -28,6 +28,7 @@ import AddDemoAccount from "./pages/AddDemoAccount";
 import AddWalletAccount from "./pages/AddWalletAccount";
 import DepositToAccount from "./pages/DepositToAccount";
 import LegalTerms from "./pages/LegalTerms";
+import TransferFunds from "./pages/TransferFunds";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const App = () => (
                 <Route path="add-wallet-account" element={<AddWalletAccount />} />
                 <Route path="deposit-to-account" element={<DepositToAccount />} />
                 <Route path="legal" element={<LegalTerms />} />
+              <Route path="transfer-funds" element={<TransferFunds />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
