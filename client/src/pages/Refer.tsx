@@ -3,14 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Gift, Copy } from "lucide-react";
 import { useUserContext } from "@/context/UserContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 
 const Refer = () => {
   const { user } = useUserContext();
   const [copied, setCopied] = useState(false);
-  const siteUrl = "https://tradelite.vercel.app";
-  const referralLink = user ? `${siteUrl}/register?ref=${user.referralCode}` : "";
+  const [referralLink, setReferralLink] = useState("");
+
+  useEffect(() => {
+    if (user && user.referralCode) {
+      const url = window.location.origin;
+      setReferralLink(`${url}/register?ref=${user.referralCode}`);
+    }
+  }, [user]);
 
   // Copy to clipboard handler
   const handleCopy = () => {

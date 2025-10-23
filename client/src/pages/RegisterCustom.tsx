@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import zxcvbn from "zxcvbn";
 import { registerUser } from "@/services/userApi";
 import { toast, Toaster } from "react-hot-toast";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const RegisterCustom = () => {
   const [firstName, setFirstName] = useState("");
@@ -20,7 +20,15 @@ const RegisterCustom = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [customError, setCustomError] = useState("");
   const [customSuccess, setCustomSuccess] = useState("");
+  const [referredBy, setReferredBy] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const ref = params.get("ref");
+    if (ref) setReferredBy(ref);
+  }, [location.search]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +61,7 @@ const RegisterCustom = () => {
         city,
         phone,
         password,
+        referredBy: referredBy || undefined,
       };
       await registerUser(userData);
       setCustomSuccess("Registration successful!");

@@ -25,7 +25,14 @@ exports.register = async (req, res) => {
     }
 
     // Optionally, get referredBy from req.body if you want to support referral links
-    const referredBy = req.body.referredBy || null;
+    let referredBy = null;
+    if (req.body.referredBy) {
+      // Find the user who owns the referral code
+      const referrer = await User.findOne({ referralCode: req.body.referredBy });
+      if (referrer) {
+        referredBy = referrer.referralCode; // Store the code of the link owner
+      }
+    }
 
     // Create new user
     const user = new User({ firstName, lastName, gender, email, city, phone, password, referralCode, referredBy });
