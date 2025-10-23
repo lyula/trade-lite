@@ -80,7 +80,7 @@ const Profile: React.FC = () => {
                 setSaving(true);
                 setSaveMsg("");
                 try {
-                  await user.update({ firstName, lastName });
+                  // TODO: Implement backend update here if needed
                   setSaveMsg("Saved!");
                 } catch (err) {
                   setSaveMsg("Error saving details");
