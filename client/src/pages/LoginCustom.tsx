@@ -1,19 +1,48 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "@/services/userApi";
+import { useState } from "react";
+import { useUserContext } from "@/context/UserContext";
 
 const LoginCustom = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [customError, setCustomError] = useState("");
+  const navigate = useNavigate();
+  const { setUser } = useUserContext();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const CustomToast = ({ message }: { message: string }) => (
+    <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-md">
+      {message}
+    </div>
+  );
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add login logic here
-    console.log("Logging in with", email, password);
+
+    if (!email || !password) {
+      setCustomError("All fields are required.");
+      return;
+    }
+
+    try {
+      const credentials = { email, password };
+      const response = await loginUser(credentials);
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      setUser(response.user); // Update context immediately
+      navigate("/dashboard");
+    } catch (error) {
+      setCustomError(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {customError && <CustomToast message={customError} />}
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-center mb-6">Login to Your Account</h1>
         <p className="text-center text-gray-600 mb-6">

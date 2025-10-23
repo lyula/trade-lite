@@ -19,11 +19,11 @@ import Markets from "./pages/Markets";
 import Platforms from "./pages/Platforms";
 import Refer from "./pages/Refer";
 import SSOCallback from "./pages/SSOCallback";
-import { ClerkProvider } from "@clerk/clerk-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Profile from "./pages/Profile"; // Import the Profile component
 import WithdrawFromAccount from "./pages/WithdrawFromAccount";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import { UserProvider } from "@/context/UserContext";
 
 import AddLiveAccount from "./pages/AddLiveAccount";
 import AddDemoAccount from "./pages/AddDemoAccount";
@@ -34,10 +34,8 @@ import TransferFunds from "./pages/TransferFunds";
 
 const queryClient = new QueryClient();
 
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
 const App = () => (
-  <ClerkProvider publishableKey={clerkPubKey}>
+  <UserProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
@@ -82,7 +80,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  </ClerkProvider>
+  </UserProvider>
 );
 
 export default App;

@@ -1,19 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Menu, ChevronDown, User, LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useUser, useAuth } from "@clerk/clerk-react";
+import { useUserContext } from "@/context/UserContext";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
   const [popoverOpen, setPopoverOpen] = useState(false); // Control popover state
+  const { user, clearUser } = useUserContext();
 
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { signOut } = useAuth();
 
   const handleSidebarClose = () => {
     setSidebarOpen(false);
@@ -28,16 +27,8 @@ const DashboardLayout = () => {
   };
 
   const handleLogout = async () => {
-    // Clear Clerk session
-    await signOut();
-
-    // Clear session storage
-    sessionStorage.clear();
-
-    // Redirect to the landing page
+    clearUser();
     navigate("/");
-
-    // Close the popover
     setPopoverOpen(false);
   };
 
@@ -74,7 +65,7 @@ const DashboardLayout = () => {
           <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
               <div className="ml-auto flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
-                <span>{`${user?.firstName || "User"} ${user?.lastName || ""}`.trim()}</span>
+                <span>{user ? `${user.firstName} ${user.lastName}` : "User"}</span>
                 <ChevronDown className="h-4 w-4" />
               </div>
             </PopoverTrigger>

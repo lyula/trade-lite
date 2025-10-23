@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useUserContext } from "@/context/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user } = useUserContext();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
@@ -47,20 +50,28 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/login")}
-            >
-              Sign In
-            </Button>
-            <Button
-              variant="hero"
-              size="sm"
-              onClick={() => navigate("/register")}
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <span className="font-semibold text-foreground">
+                {user.firstName} {user.lastName}
+              </span>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  variant="hero"
+                  size="sm"
+                  onClick={() => navigate("/register")}
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
