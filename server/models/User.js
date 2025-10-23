@@ -30,6 +30,15 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  referralCode: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  referredBy: {
+    type: String,
+    default: null
   }
 }, { timestamps: true });
 

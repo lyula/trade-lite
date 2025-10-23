@@ -12,8 +12,23 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Generate a unique referral code (no name chars, just random)
+    const generateReferralCode = () => {
+      return Math.random().toString(36).substring(2, 10).toUpperCase();
+    };
+
+    let referralCode;
+    let codeExists = true;
+    while (codeExists) {
+      referralCode = generateReferralCode();
+      codeExists = await User.findOne({ referralCode });
+    }
+
+    // Optionally, get referredBy from req.body if you want to support referral links
+    const referredBy = req.body.referredBy || null;
+
     // Create new user
-    const user = new User({ firstName, lastName, gender, email, city, phone, password });
+    const user = new User({ firstName, lastName, gender, email, city, phone, password, referralCode, referredBy });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -42,7 +57,7 @@ exports.login = async (req, res) => {
     // Generate JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    res.status(200).json({ token, user: { id: user._id, email: user.email, firstName: user.firstName, lastName: user.lastName } });
+    res.status(200).json({ token, user: { id: user._id, email: user.email, firstName: user.firstName, lastName: user.lastName, referralCode: user.referralCode } });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
