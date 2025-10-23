@@ -48,10 +48,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading state while authentication is resolving
+    // While loading, stay on the current page (login or dashboard) and render nothing
+    return null;
   }
 
   if (!isAuthenticated) {
+    // Only redirect to login after loading is complete and authentication failed
     return <Navigate to="/login" replace />;
   }
 
