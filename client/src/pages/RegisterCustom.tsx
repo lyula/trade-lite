@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import zxcvbn from "zxcvbn";
 import { registerUser } from "@/services/userApi";
 import { toast, Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterCustom = () => {
   const [firstName, setFirstName] = useState("");
@@ -273,12 +273,9 @@ const RegisterCustom = () => {
 
         <p className="text-center text-sm text-gray-600 mt-6">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-teal-500 hover:underline"
-          >
+          <Link to="/login" className="text-teal-500 hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

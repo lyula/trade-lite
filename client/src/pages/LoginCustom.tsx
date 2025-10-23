@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "@/services/userApi";
 import { useState } from "react";
 import { useUserContext } from "@/context/UserContext";
+import { Link } from "react-router-dom";
 
 const LoginCustom = () => {
   const [email, setEmail] = useState("");
@@ -89,7 +90,7 @@ const LoginCustom = () => {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account? <a href="/register" className="text-teal-500 hover:underline">Create Live Account</a>
+          Don't have an account? <Link to="/register" className="text-teal-500 hover:underline">Create Live Account</Link>
         </p>
       </div>
     </div>
