@@ -2,7 +2,7 @@ import { Users, Home, CreditCard, List, ChevronLeft, ChevronRight, Wallet, Rocke
 import { Link } from "react-router-dom";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; setSidebarOpen: (v: boolean) => void }) => (
-  <aside className={`fixed inset-y-0 left-0 z-20 bg-card border-r p-4 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} flex flex-col ${!sidebarOpen ? 'hidden md:flex' : ''}`}>
+  <aside className={`fixed inset-y-0 left-0 z-20 bg-card border-r p-4 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'} flex flex-col ${!sidebarOpen ? 'max-md:hidden' : ''}`}>
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-2">
         <img src="/lite-logo.jpg" alt="Admin Logo" width={32} height={32} className="rounded-full" />
