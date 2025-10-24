@@ -37,11 +37,11 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; s
         <Briefcase className="h-5 w-5" />
         {sidebarOpen && <span>Live Accounts</span>}
       </Link>
-      <Link to="/admin/transactions" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+      <Link to="/admin/deposits" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
         <ArrowDownCircle className="h-5 w-5" />
         {sidebarOpen && <span>Deposits</span>}
       </Link>
-      <Link to="/admin/transactions" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+      <Link to="/admin/withdrawals" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
         <ArrowUpCircle className="h-5 w-5" />
         {sidebarOpen && <span>Withdrawals</span>}
       </Link>

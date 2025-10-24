@@ -13,6 +13,11 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminRegister from "./pages/admin/AdminRegister";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminUsers from "./pages/admin/Users";
+import AdminWallets from "./pages/admin/Wallets";
+import AdminDemoAccounts from "./pages/admin/DemoAccounts";
+import AdminLiveAccounts from "./pages/admin/LiveAccounts";
+import AdminDeposits from "./pages/admin/Deposits";
+import AdminWithdrawals from "./pages/admin/Withdrawals";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -57,6 +62,11 @@ const App = () => (
             <Route path="/admin/register" element={<AdminRegister />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/wallets" element={<AdminWallets />} />
+            <Route path="/admin/demo-accounts" element={<AdminDemoAccounts />} />
+            <Route path="/admin/live-accounts" element={<AdminLiveAccounts />} />
+            <Route path="/admin/deposits" element={<AdminDeposits />} />
+            <Route path="/admin/withdrawals" element={<AdminWithdrawals />} />
             <Route
               path="/dashboard"
               element={
