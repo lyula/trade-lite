@@ -8,11 +8,13 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       await adminLogin(email, password);
       localStorage.setItem("admin", "true");
@@ -28,6 +30,8 @@ const AdminLogin = () => {
       }, 2000);
     } catch (err: any) {
       setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +70,15 @@ const AdminLogin = () => {
             </button>
           </div>
         </div>
-        <button type="submit" className="w-full bg-primary text-white py-2 rounded font-semibold hover:bg-primary/90 transition">Login</button>
+        <button type="submit" className="w-full bg-primary text-white py-2 rounded font-semibold hover:bg-primary/90 transition flex items-center justify-center" disabled={loading}>
+          {loading ? (
+            <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+          ) : null}
+          {loading ? "Logging in..." : "Login"}
+        </button>
         <div className="mt-4 text-center">
           <span>Need an account? </span>
           <button type="button" className="text-primary underline" onClick={() => navigate("/admin/register")}>Register</button>
