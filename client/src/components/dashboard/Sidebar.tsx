@@ -69,15 +69,15 @@ const Sidebar = ({ isOpen, onClose, onExpand, onToggle }: SidebarProps) => {
     >
       <div className="flex h-16 items-center border-b px-4">
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-foreground md:hidden">Trade</span>
-          <span className="text-2xl font-bold text-primary md:hidden">Lite</span>
-          {isOpen ? (
-            <>
-              <span className="hidden md:inline text-2xl font-bold text-foreground">Trade</span>
-              <span className="hidden md:inline text-2xl font-bold text-primary">Lite</span>
-            </>
-          ) : (
-            <span className="hidden md:inline text-2xl font-bold text-primary">TL</span>
+            <span className="text-2xl font-bold text-foreground md:hidden">Equity</span>
+            <span className="text-2xl font-bold text-primary md:hidden">Vault</span>
+            {isOpen ? (
+              <>
+                <span className="hidden md:inline text-2xl font-bold text-foreground">Equity</span>
+                <span className="hidden md:inline text-2xl font-bold text-primary">Vault</span>
+              </>
+            ) : (
+              <span className="hidden md:inline text-2xl font-bold text-primary">EV</span>
           )}
         </div>
       </div>
