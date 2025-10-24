@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Menu, ChevronDown, ChevronLeft, LogOut } from "lucide-react";
@@ -41,14 +41,27 @@ const AdminDashboardLayout = ({ children }: { children?: ReactNode }) => {
 function AdminEmailDropdown({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
   const handleLogout = () => {
     localStorage.removeItem("adminEmail");
+    sessionStorage.clear();
     navigate("/admin/login");
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         className="flex items-center gap-1 px-2 py-1 rounded hover:bg-muted/50 text-sm font-medium text-muted-foreground"
         onClick={() => setOpen((v) => !v)}
