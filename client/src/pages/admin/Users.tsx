@@ -11,8 +11,8 @@ interface User {
   referralCode?: string;
 }
 
-const columns: { header: string; accessor: keyof User }[] = [
-  { header: "ID", accessor: "_id" },
+const columns: { header: string; accessor: keyof User | "number" }[] = [
+  { header: "#", accessor: "number" },
   { header: "First Name", accessor: "firstName" },
   { header: "Last Name", accessor: "lastName" },
   { header: "Email", accessor: "email" },
@@ -45,7 +45,12 @@ const Users = () => {
 
   // Pagination logic
   const totalPages = Math.ceil(users.length / ITEMS_PER_PAGE);
-  const paginatedUsers = users.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  // Add continuous numbering to paginated users
+  const paginatedUsers = users.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+    .map((user, idx) => ({
+      ...user,
+      number: users.length - ((page - 1) * ITEMS_PER_PAGE + idx)
+    }));
 
   return (
     <AdminDashboardLayout>
