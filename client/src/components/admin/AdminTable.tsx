@@ -10,7 +10,7 @@ type AdminTableProps<T> = {
   data: T[];
 };
 
-function AdminTable<T extends { _id?: string; id?: string | number; number?: number }>({ columns, data }: AdminTableProps<T>) {
+function AdminTable<T extends { _id?: string; id?: string | number; number?: number; walletBalance?: number }>({ columns, data }: AdminTableProps<T>) {
   return (
     <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="min-w-full divide-y divide-border">
@@ -30,7 +30,9 @@ function AdminTable<T extends { _id?: string; id?: string | number; number?: num
                 <td key={String(col.accessor)} className="px-4 py-2 whitespace-nowrap">
                   {col.accessor === "number"
                     ? row.number ?? ""
-                    : String(row[col.accessor as keyof T] ?? "")}
+                    : col.accessor === "walletBalance"
+                      ? (row.walletBalance !== undefined ? row.walletBalance.toFixed(2) : "0.00")
+                      : String(row[col.accessor as keyof T] ?? "")}
                 </td>
               ))}
             </tr>

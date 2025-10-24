@@ -11,6 +11,7 @@ interface User {
   referralCode?: string;
   referredBy?: string;
   number?: number;
+  walletBalance?: number;
 }
 
 const columns: { header: string; accessor: keyof User | "number" }[] = [
@@ -20,6 +21,7 @@ const columns: { header: string; accessor: keyof User | "number" }[] = [
   { header: "Email", accessor: "email" },
   { header: "Referral Code", accessor: "referralCode" },
   { header: "Referred By", accessor: "referredBy" },
+  { header: "Wallet Balance (KES)", accessor: "walletBalance" },
 ];
 
 const Users = () => {
@@ -85,10 +87,11 @@ const Users = () => {
       const referrals = users.slice(1);
       const referralCount = referrals.length;
       paginatedUsers = [
-        owner,
+        { ...owner, walletBalance: owner.walletBalance ?? 0.00 },
         ...referrals.map((user, idx) => ({
           ...user,
-          number: referralCount - idx
+          number: referralCount - idx,
+          walletBalance: user.walletBalance ?? 0.00
         }))
       ];
     } else {
@@ -99,12 +102,14 @@ const Users = () => {
     if (Array.isArray(users) && users.length > 0 && typeof total === "number" && total > 0) {
       paginatedUsers = users.map((user, idx) => ({
         ...user,
-        number: total - ((page - 1) * ITEMS_PER_PAGE + idx)
+        number: total - ((page - 1) * ITEMS_PER_PAGE + idx),
+        walletBalance: user.walletBalance ?? 0.00
       }));
     } else if (Array.isArray(users) && users.length > 0) {
       paginatedUsers = users.map((user, idx) => ({
         ...user,
-        number: users.length - idx
+        number: users.length - idx,
+        walletBalance: user.walletBalance ?? 0.00
       }));
     } else {
       paginatedUsers = [];
