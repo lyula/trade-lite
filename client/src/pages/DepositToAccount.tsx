@@ -115,7 +115,7 @@ const DepositToAccount = () => {
               Initiate Deposit
             </Button>
             <span className="block text-sm text-muted-foreground text-center mt-4">
-              TradeLite does not accept payments from numbers or cards not registered under your name. I confirm that my account name with TradeLite matches the name on my card or mobile number.
+              EquityVault does not accept payments from numbers or cards not registered under your name. I confirm that my account name with EquityVault matches the name on my card or mobile number.
             </span>
           </form>
         </CardContent>

@@ -6,13 +6,13 @@ const LegalTerms: React.FC = () => (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">1. Introduction</h2>
       <p>
-        TradeLite is an online trading platform that provides users with access to financial markets, including forex, cryptocurrencies, stocks, commodities, and related services. By using our platform, you agree to comply with these legal terms and policies.
+  EquityVault is an online trading platform that provides users with access to financial markets, including forex, cryptocurrencies, stocks, commodities, and related services. By using our platform, you agree to comply with these legal terms and policies.
       </p>
     </section>
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">2. Eligibility</h2>
       <p>
-        You must be at least 18 years old and have the legal capacity to enter into binding agreements to use TradeLite. You are responsible for ensuring that your use of our services complies with all applicable laws and regulations in your jurisdiction.
+  You must be at least 18 years old and have the legal capacity to enter into binding agreements to use EquityVault. You are responsible for ensuring that your use of our services complies with all applicable laws and regulations in your jurisdiction.
       </p>
     </section>
     <section className="mb-8">
@@ -24,7 +24,7 @@ const LegalTerms: React.FC = () => (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">4. Risk Disclosure</h2>
       <p>
-        Trading financial instruments involves significant risk and may result in the loss of your invested capital. You acknowledge that you understand these risks and agree that TradeLite is not liable for any losses incurred through trading activities.
+  Trading financial instruments involves significant risk and may result in the loss of your invested capital. You acknowledge that you understand these risks and agree that EquityVault is not liable for any losses incurred through trading activities.
       </p>
     </section>
     <section className="mb-8">
@@ -45,7 +45,7 @@ const LegalTerms: React.FC = () => (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">7. Fees and Charges</h2>
       <p>
-        TradeLite may charge fees for certain services, including trading commissions, withdrawal fees, and account maintenance. All applicable fees are disclosed on our website and may be updated from time to time.
+  EquityVault may charge fees for certain services, including trading commissions, withdrawal fees, and account maintenance. All applicable fees are disclosed on our website and may be updated from time to time.
       </p>
     </section>
     <section className="mb-8">
@@ -57,7 +57,7 @@ const LegalTerms: React.FC = () => (
     <section className="mb-8">
       <h2 className="text-xl font-semibold mb-2">9. Limitation of Liability</h2>
       <p>
-        TradeLite is not liable for any indirect, incidental, or consequential damages arising from your use of the platform. Our maximum liability is limited to the amount you have paid for our services.
+  EquityVault is not liable for any indirect, incidental, or consequential damages arising from your use of the platform. Our maximum liability is limited to the amount you have paid for our services.
       </p>
     </section>
     <section className="mb-8">
@@ -69,7 +69,7 @@ const LegalTerms: React.FC = () => (
     <section>
       <h2 className="text-xl font-semibold mb-2">11. Contact Information</h2>
       <p>
-        If you have questions or concerns about these legal terms, please contact our support team at support@tradelite.com.
+  If you have questions or concerns about these legal terms, please contact our support team at support@equityvault.com.
       </p>
     </section>
   </div>

@@ -5,7 +5,7 @@ const TermsAndConditions = () => {
         <h1 className="text-3xl font-bold mb-6">Terms and Conditions</h1>
 
         <p className="mb-4">
-          Welcome to Trade Lite! By using our platform, you agree to the following terms and conditions:
+          Welcome to EuityVault! By using our platform, you agree to the following terms and conditions:
         </p>
 
         <h2 className="text-xl font-semibold mb-2">1. Account Registration</h2>

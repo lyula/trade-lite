@@ -6,7 +6,7 @@ const Sidebar: React.FC = () => {
     <aside className="w-64 bg-card border-r border-border h-screen overflow-y-auto p-4">
       <div className="flex items-center gap-2 mb-8">
         <TrendingUp className="h-6 w-6 text-primary" />
-        <span className="text-xl font-bold text-foreground">TradeLite</span>
+        <span className="text-xl font-bold text-foreground">Equity Vault</span>
       </div>
 
       <nav className="space-y-4">

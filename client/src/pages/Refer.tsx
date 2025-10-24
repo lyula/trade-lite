@@ -41,7 +41,7 @@ const Refer = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
-            Invite your friends to TradeLite and earn rewards when they start trading.
+            Invite your friends to EquityVault and earn rewards when they start trading.
           </p>
           <div className="flex gap-2">
             <Input value={referralLink} readOnly />

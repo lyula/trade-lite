@@ -13,7 +13,7 @@ const Footer = () => {
               <div className="bg-gradient-primary p-2 rounded-lg">
                 <TrendingUp className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground">TradeLite</span>
+              <span className="text-xl font-bold text-foreground">EquityVault</span>
             </div>
             <p className="text-muted-foreground mb-4">
               Professional trading platform for crypto, commodities, stocks, and indices. Trade smarter with advanced tools and automated solutions.
@@ -48,8 +48,8 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                <a href="mailto:support@TradeLite.com" className="text-muted-foreground hover:text-accent transition-colors">
-                  support@TradeLite.com
+                <a href="mailto:support@equityvault.com" className="text-muted-foreground hover:text-accent transition-colors">
+                  support@equityvault.com
                 </a>
               </li>
               <li className="flex items-start gap-2">
@@ -72,7 +72,7 @@ const Footer = () => {
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-muted-foreground text-sm">
-              © {currentYear} TradeLite. All rights reserved.
+              © {currentYear} EquityVault. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-muted-foreground hover:text-accent transition-colors text-sm">

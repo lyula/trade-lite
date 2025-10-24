@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();
 const corsOptions = {
   origin: [
-    "https://tradelite.vercel.app",
+  "https://equityvault.vercel.app",
     "http://localhost:8080"
   ],
   credentials: true

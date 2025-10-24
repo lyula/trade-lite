@@ -17,12 +17,12 @@ const Header = () => {
           <div className="flex items-center gap-2">
             <img
               src="/lite-logo.jpg"
-              alt="TradeLite Logo"
+              alt="EquityVault Logo"
               width="40"
               height="40"
               className="rounded-full"
             />
-            <span className="text-xl font-bold text-foreground">TradeLite</span>
+            <span className="text-xl font-bold text-foreground">EquityVault</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
