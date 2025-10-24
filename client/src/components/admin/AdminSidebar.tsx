@@ -1,8 +1,8 @@
-import { Users, Home, CreditCard, List, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Home, CreditCard, List, ChevronLeft, ChevronRight, Wallet, Rocket, Briefcase, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; setSidebarOpen: (v: boolean) => void }) => (
-  <aside className={`fixed inset-y-0 left-0 z-20 bg-card border-r p-4 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'} hidden md:flex flex-col`}>
+  <aside className={`fixed inset-y-0 left-0 z-20 bg-card border-r p-4 transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} flex flex-col ${!sidebarOpen ? 'hidden md:flex' : ''}`}>
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-2">
         <img src="/lite-logo.jpg" alt="Admin Logo" width={32} height={32} className="rounded-full" />
@@ -25,13 +25,25 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; s
         <Users className="h-5 w-5" />
         {sidebarOpen && <span>Users</span>}
       </Link>
-      <Link to="/admin/accounts" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
-        <CreditCard className="h-5 w-5" />
-        {sidebarOpen && <span>Accounts</span>}
+      <Link to="/admin/wallets" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+        <Wallet className="h-5 w-5" />
+        {sidebarOpen && <span>Wallets</span>}
+      </Link>
+      <Link to="/admin/demo-accounts" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+        <Rocket className="h-5 w-5" />
+        {sidebarOpen && <span>Demo Accounts</span>}
+      </Link>
+      <Link to="/admin/live-accounts" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+        <Briefcase className="h-5 w-5" />
+        {sidebarOpen && <span>Live Accounts</span>}
       </Link>
       <Link to="/admin/transactions" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
-        <List className="h-5 w-5" />
-        {sidebarOpen && <span>Transactions</span>}
+        <ArrowDownCircle className="h-5 w-5" />
+        {sidebarOpen && <span>Deposits</span>}
+      </Link>
+      <Link to="/admin/transactions" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+        <ArrowUpCircle className="h-5 w-5" />
+        {sidebarOpen && <span>Withdrawals</span>}
       </Link>
     </nav>
   </aside>

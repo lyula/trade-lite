@@ -1,9 +1,9 @@
 import { ReactNode, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Menu, ChevronDown, ChevronLeft } from "lucide-react";
 import AdminSidebar from "./AdminSidebar";
 import { useAdmin } from "@/hooks/use-admin";
-
 const AdminDashboardLayout = ({ children }: { children?: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
 
@@ -18,16 +18,16 @@ const AdminDashboardLayout = ({ children }: { children?: ReactNode }) => {
           <button
             className="md:hidden p-2"
             onClick={() => setSidebarOpen((v) => !v)}
-            aria-label="Toggle sidebar"
+            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
-            <Menu className="h-6 w-6" />
+            {sidebarOpen ? <ChevronLeft className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
           <span className="font-bold text-lg">Admin Dashboard</span>
-          <div className="flex items-center gap-2">
-            {adminEmail && (
-              <span className="text-sm font-medium text-muted-foreground">{adminEmail}</span>
-            )}
-          </div>
+                  <div className="flex items-center gap-2 relative">
+                    {adminEmail && (
+                      <AdminEmailDropdown email={adminEmail} />
+                    )}
+                  </div>
         </header>
         <main className="p-4 md:p-6">
           {children ? children : <Outlet />}
@@ -37,4 +37,39 @@ const AdminDashboardLayout = ({ children }: { children?: ReactNode }) => {
   );
 };
 
+
+function AdminEmailDropdown({ email }: { email: string }) {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminEmail");
+    navigate("/admin/login");
+  };
+
+  return (
+    <div className="relative">
+      <button
+        className="flex items-center gap-1 px-2 py-1 rounded hover:bg-muted/50 text-sm font-medium text-muted-foreground"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {email}
+        <ChevronDown className="h-4 w-4" />
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-32 bg-card border rounded shadow-lg z-50">
+          <button
+            className="w-full px-4 py-2 text-left text-sm hover:bg-muted/50"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default AdminDashboardLayout;
+
+// ...existing code...
