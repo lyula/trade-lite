@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import LoginCustom from "./pages/LoginCustom";
 import RegisterCustom from "./pages/RegisterCustom";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminRegister from "./pages/admin/AdminRegister";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -48,6 +50,9 @@ const App = () => (
             <Route path="/login" element={<LoginCustom />} />
             <Route path="/register" element={<RegisterCustom />} />
             <Route path="/login/sso-callback" element={<SSOCallback />} />
+            {/* Admin Auth Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
             <Route
               path="/dashboard"
               element={
