@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Menu, ChevronDown, ChevronLeft } from "lucide-react";
+import { Menu, ChevronDown, ChevronLeft, LogOut } from "lucide-react";
 import AdminSidebar from "./AdminSidebar";
 import { useAdmin } from "@/hooks/use-admin";
 const AdminDashboardLayout = ({ children }: { children?: ReactNode }) => {
@@ -59,9 +59,10 @@ function AdminEmailDropdown({ email }: { email: string }) {
       {open && (
         <div className="absolute right-0 mt-2 w-32 bg-card border rounded shadow-lg z-50">
           <button
-            className="w-full px-4 py-2 text-left text-sm hover:bg-muted/50"
+            className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted/50"
             onClick={handleLogout}
           >
+            <LogOut className="h-4 w-4" />
             Logout
           </button>
         </div>
