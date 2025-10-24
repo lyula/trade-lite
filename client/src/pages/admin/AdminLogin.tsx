@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { adminLogin } from "@/services/adminApi";
+import { toast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -11,12 +13,21 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    // TODO: Replace with real admin login API call
-    if (email === "admin@tradelite.com" && password === "admin123") {
+    try {
+      await adminLogin(email, password);
       localStorage.setItem("admin", "true");
-      navigate("/admin/users");
-    } else {
-      setError("Invalid credentials");
+      localStorage.setItem("adminEmail", email);
+      toast({
+        title: "Login Successful",
+        description: "Welcome to the admin dashboard!",
+        variant: "default",
+        duration: 2000,
+      });
+      setTimeout(() => {
+        navigate("/admin/dashboard");
+      }, 2000);
+    } catch (err: any) {
+      setError(err.message || "Login failed");
     }
   };
 

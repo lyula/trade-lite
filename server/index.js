@@ -24,11 +24,16 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+
 // User routes
 app.use('/api/users', userRoutes);
 
 // Use auth routes
 app.use("/api/auth", authRoutes);
+
+// Admin routes
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {

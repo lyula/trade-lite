@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { adminRegister } from "@/services/adminApi";
+import { toast } from "@/hooks/use-toast";
 
 const AdminRegister = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -15,11 +18,37 @@ const AdminRegister = () => {
     setError("");
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      toast({
+        title: "Registration Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+        duration: 3000,
+      });
       return;
     }
-    // TODO: Replace with real admin registration API call
-    localStorage.setItem("admin", "true");
-    navigate("/admin/users");
+    setLoading(true);
+    try {
+      await adminRegister(email, password);
+      toast({
+        title: "Registration Successful",
+        description: "Admin account created successfully. Redirecting to login...",
+        variant: "default",
+        duration: 3000,
+      });
+      setTimeout(() => {
+        navigate("/admin/login");
+      }, 3000);
+    } catch (err: any) {
+      setError(err.message || "Registration failed");
+      toast({
+        title: "Registration Error",
+        description: err.message || "Registration failed",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,7 +106,15 @@ const AdminRegister = () => {
             </button>
           </div>
         </div>
-        <button type="submit" className="w-full bg-primary text-white py-2 rounded font-semibold hover:bg-primary/90 transition">Register</button>
+        <button type="submit" className="w-full bg-primary text-white py-2 rounded font-semibold hover:bg-primary/90 transition flex items-center justify-center" disabled={loading}>
+          {loading && (
+            <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+          )}
+          {loading ? "Registering..." : "Register"}
+        </button>
         <div className="mt-4 text-center">
           <span>Already have an account? </span>
           <button type="button" className="text-primary underline" onClick={() => navigate("/admin/login")}>Login</button>

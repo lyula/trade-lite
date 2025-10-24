@@ -11,6 +11,8 @@ import LoginCustom from "./pages/LoginCustom";
 import RegisterCustom from "./pages/RegisterCustom";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminRegister from "./pages/admin/AdminRegister";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminUsers from "./pages/admin/Users";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -53,6 +55,8 @@ const App = () => (
             {/* Admin Auth Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
             <Route
               path="/dashboard"
               element={

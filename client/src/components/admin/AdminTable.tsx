@@ -10,7 +10,7 @@ type AdminTableProps<T> = {
   data: T[];
 };
 
-function AdminTable<T extends { id: string | number }>({ columns, data }: AdminTableProps<T>) {
+function AdminTable<T extends { _id?: string; id?: string | number }>({ columns, data }: AdminTableProps<T>) {
   return (
     <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="min-w-full divide-y divide-border">
@@ -25,10 +25,10 @@ function AdminTable<T extends { id: string | number }>({ columns, data }: AdminT
         </thead>
         <tbody className="divide-y divide-border">
           {data.map((row) => (
-            <tr key={row.id} className="hover:bg-muted/50">
+            <tr key={row._id ?? row.id} className="hover:bg-muted/50">
               {columns.map((col) => (
                 <td key={String(col.accessor)} className="px-4 py-2 whitespace-nowrap">
-                  {String(row[col.accessor])}
+                  {String(row[col.accessor] ?? "")}
                 </td>
               ))}
             </tr>
