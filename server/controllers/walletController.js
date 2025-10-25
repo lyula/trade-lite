@@ -1,3 +1,31 @@
+// GET all wallets (admin view) with pagination and ordering
+exports.getAllWallets = async (req, res) => {
+  try {
+    let { page = 1, limit = 20, sort = "createdAt" } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const sortOrder = req.query.order === "asc" ? 1 : -1;
+
+    const wallets = await Wallet.find({})
+      .populate("userId", "firstName lastName email referralCode")
+      .sort({ [sort]: sortOrder })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const total = await Wallet.countDocuments();
+
+    // Numbering: oldest is #1, newest is #total
+    const numberedWallets = wallets.map((wallet, idx) => ({
+      number: (page - 1) * limit + idx + 1,
+      ...wallet._doc,
+      user: wallet.userId,
+    }));
+
+    res.json({ success: true, wallets: numberedWallets, total });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 // GET wallets by userId
 exports.getWalletsByUser = async (req, res) => {
   try {
