@@ -48,9 +48,18 @@ const CreateAccountModal: React.FC<CreateAccountModalProps> = ({ open, onClose, 
                 onChange={handleChange}
                 className="w-full border rounded px-2 py-1"
               >
-                <option value="standard">Standard</option>
-                <option value="pro">Pro</option>
-                {type === "live" && <option value="premier">Premier</option>}
+                {type === "live" && <>
+                  <option value="standard">Standard</option>
+                  <option value="pro">Pro</option>
+                  <option value="premier">Premier</option>
+                  <option value="automated-standard">Automated Standard</option>
+                  <option value="automated-pro">Automated Pro</option>
+                  <option value="automated-premier">Automated Premier</option>
+                </>}
+                {type === "demo" && <>
+                  <option value="standard">Standard</option>
+                  <option value="automated-standard">Automated Standard</option>
+                </>}
               </select>
             </div>
           )}

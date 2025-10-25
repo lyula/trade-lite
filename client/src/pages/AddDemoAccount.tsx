@@ -79,26 +79,14 @@ const AddDemoAccount = () => {
                 }`}
               >
                 <div className="flex items-start gap-4">
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 ${
-                      selectedAccountType === "standard" ? "border-primary" : "border-border"
-                    }`}
+                  <select
+                    value={selectedAccountType}
+                    onChange={e => setSelectedAccountType(e.target.value)}
+                    className="w-full border rounded px-2 py-2"
                   >
-                    {selectedAccountType === "standard" && (
-                      <div className="w-3 h-3 rounded-full bg-primary"></div>
-                    )}
-                  </div>
-                  <div className="flex-1 flex items-start justify-between">
-                    <div className="text-left">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center">
-                          <span className="text-white text-sm">📊</span>
-                        </div>
-                        <span className="font-semibold text-foreground">Standard</span>
-                      </div>
-                      <span className="text-muted-foreground text-xs">For most users, low spreads</span>
-                    </div>
-                  </div>
+                    <option value="standard">Standard</option>
+                    <option value="automated-standard">Automated Standard</option>
+                  </select>
                 </div>
               </button>
               <button
