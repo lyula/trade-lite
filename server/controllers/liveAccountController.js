@@ -1,3 +1,17 @@
+// DELETE live account by ID
+exports.deleteLiveAccount = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await LiveAccount.findById(id);
+    if (!account) {
+      return res.status(404).json({ success: false, error: 'Live account not found' });
+    }
+    await LiveAccount.deleteOne({ _id: id });
+    res.json({ success: true, message: 'Live account deleted' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 // GET live accounts by userId
 exports.getLiveAccountsByUser = async (req, res) => {
   try {

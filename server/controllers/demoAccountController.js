@@ -1,3 +1,17 @@
+// DELETE demo account by ID
+exports.deleteDemoAccount = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await DemoAccount.findById(id);
+    if (!account) {
+      return res.status(404).json({ success: false, error: 'Demo account not found' });
+    }
+    await DemoAccount.deleteOne({ _id: id });
+    res.json({ success: true, message: 'Demo account deleted' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 const DemoAccount = require('../models/DemoAccount');
 const User = require('../models/User');
 

@@ -83,9 +83,28 @@ const AccountCard = ({
               setOpen={setOpenDeleteModal}
               accountNumber={accountNumber}
               accountType={accountType}
-              onDelete={(accNum, accType) => {
-                // TODO: Add delete logic for accNum and accType here
-                // Example: if (accType === "Live") { ... } else if (accType === "Demo") { ... }
+              onDelete={async (accNum, accType) => {
+                const API_URL = import.meta.env.VITE_BACKEND_URL;
+                let endpoint = "";
+                let id = accNum;
+                if (accType.toLowerCase().includes("live")) {
+                  endpoint = `/api/live-accounts/${id}`;
+                } else {
+                  endpoint = `/api/demo-accounts/${id}`;
+                }
+                try {
+                  const res = await fetch(`${API_URL}${endpoint}`, {
+                    method: "DELETE",
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    window.location.reload();
+                  } else {
+                    alert(data.error || "Failed to delete account.");
+                  }
+                } catch (err) {
+                  alert("Error deleting account.");
+                }
               }}
             />
           </div>

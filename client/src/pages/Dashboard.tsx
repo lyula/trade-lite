@@ -231,8 +231,28 @@ const Dashboard = () => {
             setOpen={setOpenDeleteModal}
             accountNumber={selectedAccount.tradingAccountNumber}
             accountType={selectedAccount.accountType}
-            onDelete={(accNum, accType) => {
-              // TODO: Add delete logic for live account here
+            onDelete={async (accNum, accType) => {
+              const API_URL = import.meta.env.VITE_BACKEND_URL;
+              // Find the account by tradingAccountNumber to get its _id
+              const account = liveAccounts.find(a => a.tradingAccountNumber === accNum);
+              if (!account) {
+                alert("Account not found.");
+                return;
+              }
+              try {
+                const res = await fetch(`${API_URL}/api/live-accounts/${account._id}`, {
+                  method: "DELETE",
+                });
+                const data = await res.json();
+                if (data.success) {
+                  setLiveAccounts(liveAccounts.filter(a => a._id !== account._id));
+                  setOpenDeleteModal(false);
+                } else {
+                  alert(data.error || "Failed to delete account.");
+                }
+              } catch (err) {
+                alert("Error deleting account.");
+              }
             }}
           />
         )}

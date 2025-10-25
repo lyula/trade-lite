@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createLiveAccount, getLiveAccountsByUser } = require('../controllers/liveAccountController');
+const { createLiveAccount, getLiveAccountsByUser, deleteLiveAccount } = require('../controllers/liveAccountController');
 
 
 // POST /api/live-accounts
@@ -10,3 +10,6 @@ router.post('/', createLiveAccount);
 router.get('/', getLiveAccountsByUser);
 
 module.exports = router;
+
+// DELETE /api/live-accounts/:id
+router.delete('/:id', deleteLiveAccount);
