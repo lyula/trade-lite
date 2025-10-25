@@ -39,11 +39,11 @@ const WalletCard = ({ currency, accountNumber, balance, currencyColor = "success
                 <ArrowDownToLine className="h-4 w-4" />
                 Deposit
               </Button>
-              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/transfers") }>
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/transfer-funds") }>
                 <ArrowLeftRight className="h-4 w-4" />
                 Transfer
               </Button>
-              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/withdrawals") }>
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/dashboard/withdraw-from-account") }>
                 <ArrowUpFromLine className="h-4 w-4" />
                 Withdraw
               </Button>

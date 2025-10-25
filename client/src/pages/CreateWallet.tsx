@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useUserContext } from "@/context/UserContext";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +12,8 @@ const CreateWalletPage: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+  const { user } = useUserContext();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
@@ -19,14 +23,43 @@ const CreateWalletPage: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    // TODO: handle wallet creation logic here
-    navigate("/dashboard");
+    if (!user || !user.id) {
+      setError("User not found. Please log in again.");
+      return;
+    }
+    setError("");
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/wallets/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          currency: form.currency,
+          password: form.password
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast({
+          title: "Wallet created successfully",
+          description: "You will be redirected to your dashboard.",
+          duration: 2000,
+        });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      } else {
+        setError(data.error || "Failed to create wallet");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    }
   };
 
   return (

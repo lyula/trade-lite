@@ -15,13 +15,17 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Dashboard = () => {
   const navigate = useNavigate();
   const [liveAccounts, setLiveAccounts] = useState([]);
+  const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recentActivity, setRecentActivity] = useState({ deposits: [], withdrawals: [] });
   const { user } = useUserContext();
 
   useEffect(() => {
     async function fetchLiveAccounts() {
       if (!user || !user.id) {
         setLiveAccounts([]);
+        setWallets([]);
+        setRecentActivity({ deposits: [], withdrawals: [] });
         setLoading(false);
         return;
       }
@@ -35,9 +39,30 @@ const Dashboard = () => {
         }
       } catch {
         setLiveAccounts([]);
-      } finally {
-        setLoading(false);
       }
+      try {
+        const res = await fetch(`${API_URL}/api/wallets?userId=${user.id}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.wallets)) {
+          setWallets(data.wallets);
+        } else {
+          setWallets([]);
+        }
+      } catch {
+        setWallets([]);
+      }
+      try {
+        const res = await fetch(`${API_URL}/api/activity/recent?userId=${user.id}`);
+        const data = await res.json();
+        if (data.success) {
+          setRecentActivity({ deposits: data.deposits || [], withdrawals: data.withdrawals || [] });
+        } else {
+          setRecentActivity({ deposits: [], withdrawals: [] });
+        }
+      } catch {
+        setRecentActivity({ deposits: [], withdrawals: [] });
+      }
+      setLoading(false);
     }
     fetchLiveAccounts();
   }, [user]);
@@ -73,7 +98,6 @@ const Dashboard = () => {
           <StatCard
             title="Total Balance"
             value="0.00 USD"
-            subtitle="Total Withdrawals"
             icon={Wallet}
           />
           <StatCard
@@ -94,12 +118,7 @@ const Dashboard = () => {
           />
         </div>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-sm text-muted-foreground">Total Withdrawals</div>
-            <div className="text-2xl font-bold">0.00 USD</div>
-          </CardContent>
-        </Card>
+
       </div>
 
       
@@ -189,7 +208,7 @@ const Dashboard = () => {
                       <span className="font-semibold">{account.platform}</span>
                     </td>
                     <td className="px-4 py-2">
-                      <Button size="sm" variant="outline">Deposit</Button>
+                      <Button size="sm" variant="outline" onClick={() => navigate('/dashboard/transfer-funds')}>Deposit</Button>
                     </td>
                     <td className="px-4 py-2 flex gap-2">
                       <Button size="icon" variant="ghost"><span role="img" aria-label="sync">🔄</span></Button>
@@ -259,15 +278,64 @@ const Dashboard = () => {
         <div className="text-center text-muted-foreground py-6">No demo accounts yet.</div>
       </div>
 
-      {/* Wallets */}
+      {/* Wallet Accounts */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Wallets</h2>
-        <Card className="bg-muted/30">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Recent Activity</CardTitle>
-            {/* Hide View More if no activity */}
-          </CardHeader>
-        </Card>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Wallet Accounts</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => navigate('/dashboard/create-wallet')}
+          >
+            <Plus className="h-4 w-4" />
+            Create Account
+          </Button>
+        </div>
+        {loading ? (
+          <div className="text-center text-muted-foreground py-6">Loading wallets...</div>
+        ) : wallets.length === 0 ? (
+          <div className="text-center text-muted-foreground py-6">No wallets yet.</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {wallets.map((wallet) => (
+              <WalletCard
+                key={wallet._id}
+                currency={wallet.currency}
+                accountNumber={wallet.walletId}
+                balance={wallet.balance?.toFixed(3) ?? "0.000"}
+                currencyColor={wallet.currency === "KES" ? "warning" : "success"}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Recent Activity */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Recent Activity</h2>
+        {recentActivity.deposits.length === 0 && recentActivity.withdrawals.length === 0 ? (
+          <div className="text-center text-muted-foreground py-6">No recent activity.</div>
+        ) : (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex flex-col gap-2">
+                {[...recentActivity.deposits, ...recentActivity.withdrawals]
+                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                  .slice(0, 5)
+                  .map((activity) => (
+                    <ActivityItem
+                      key={activity._id}
+                      date={new Date(activity.createdAt).toLocaleString()}
+                      description={activity.amount > 0 ? `Deposit` : `Withdrawal`}
+                      accountNumber={activity.walletId}
+                      status="Accepted"
+                    />
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
