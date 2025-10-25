@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Wallet, CreditCard, TrendingUp, ArrowDownToLine, ArrowUpFromLine, Plus } from "lucide-react";
+import { CheckCircle2, Wallet, CreditCard, TrendingUp, ArrowDownToLine, ArrowUpFromLine, Plus, RefreshCw } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 import AccountCard from "@/components/dashboard/AccountCard";
 import WalletCard from "@/components/dashboard/WalletCard";
@@ -201,7 +201,10 @@ const Dashboard = () => {
                       <Button size="sm" variant="outline" onClick={() => navigate('/dashboard/transfer-funds')}>Deposit</Button>
                     </td>
                     <td className="px-4 py-2 flex gap-2">
-                      <Button size="icon" variant="ghost"><span role="img" aria-label="sync">🔄</span></Button>
+                      <Button size="icon" variant="ghost">
+                        {/* Lucide RefreshCw icon for consistency with AccountCard */}
+                        <RefreshCw className="h-4 w-4" />
+                      </Button>
                       <Button size="icon" variant="ghost"><span role="img" aria-label="options">⋮</span></Button>
                     </td>
                   </tr>
