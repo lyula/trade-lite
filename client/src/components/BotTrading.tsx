@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bot, Zap, DollarSign, ShieldCheck, MessageSquare } from "lucide-react";
-import botImage from "@/assets/bot-trading.jpg";
+import botImage from "@/assets/auto-trading.jpg";
 
 const BotTrading = () => {
   const benefits = [
@@ -29,11 +29,12 @@ const BotTrading = () => {
           {/* Bot Image */}
           <div className="relative animate-fade-in order-2 lg:order-1">
             <div className="absolute inset-0 bg-gradient-primary opacity-20 blur-3xl"></div>
-            <img 
-              src={botImage} 
-              alt="Automated trading bot interface with AI indicators" 
-              className="relative rounded-2xl shadow-glow border border-primary/20 w-full max-w-md mx-auto"
-            />
+              <img
+                src={botImage}
+                alt="Automated trading bot interface with AI indicators"
+                className="relative rounded-2xl shadow-glow border border-primary/20 w-full max-w-md mx-auto"
+                style={{ height: '400px', objectFit: 'cover' }}
+              />
           </div>
           
           {/* Content */}

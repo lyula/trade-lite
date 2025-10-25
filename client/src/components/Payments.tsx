@@ -1,14 +1,16 @@
 import { Card } from "@/components/ui/card";
+import mPesaLogo from "@/assets/m-pesa-logo.jpg";
 import { CreditCard, Smartphone, Banknote, Shield } from "lucide-react";
 
 const Payments = () => {
   const paymentMethods = [
     {
-      icon: Smartphone,
+      icon: null, // Will use img for M-Pesa
       name: "M-Pesa",
       description: "Instant deposits via M-Pesa. Available 24/7 with zero processing fees.",
       badge: "Most Popular in Kenya",
       color: "accent",
+      logo: mPesaLogo,
     },
     {
       icon: CreditCard,
@@ -46,14 +48,18 @@ const Payments = () => {
               className="p-8 bg-card border-border hover:border-accent/50 transition-all duration-300 hover:shadow-accent-glow group text-center animate-slide-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-accent p-4 mb-4 group-hover:scale-110 transition-transform">
-                <method.icon className="w-full h-full text-accent-foreground" />
+              <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                {method.name === "M-Pesa" ? (
+                  <img src={method.logo} alt="M-Pesa Logo" className="w-full h-full object-contain rounded-full border" style={{ borderColor: '#00afaa', borderWidth: '2px' }} />
+                ) : (
+                  <div className="rounded-full bg-gradient-accent p-4 w-full h-full flex items-center justify-center">
+                    <method.icon className="w-full h-full text-accent-foreground" />
+                  </div>
+                )}
               </div>
-              
               <div className="inline-block bg-accent/10 border border-accent/20 rounded-full px-3 py-1 mb-3">
                 <span className="text-xs text-accent">{method.badge}</span>
               </div>
-              
               <h3 className="text-2xl font-bold mb-2 text-foreground">{method.name}</h3>
               <p className="text-muted-foreground">{method.description}</p>
             </Card>
