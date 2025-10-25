@@ -33,6 +33,8 @@ const Users = () => {
   const [pendingSearch, setPendingSearch] = useState("");
   const ITEMS_PER_PAGE = 15;
 
+  const [total, setTotal] = useState<number>(0);
+
   useEffect(() => {
     setLoading(true);
     setError("");
@@ -65,17 +67,24 @@ const Users = () => {
         })
         .then((data) => {
           setUsers(Array.isArray(data.users) ? data.users : []);
+          // If total is not set, set it and jump to last page
+          if (total === 0 && typeof data.total === "number" && data.total > 0) {
+            setTotal(data.total);
+            const lastPage = Math.ceil(data.total / ITEMS_PER_PAGE) || 1;
+            setPage(lastPage);
+            setLoading(false);
+            return;
+          }
           setTotal(typeof data.total === "number" ? data.total : 0);
         })
         .catch((err) => setError(err.message))
         .finally(() => setLoading(false));
     }
-  }, [search, page]);
+  }, [search, page, total]);
 
   // Pagination logic
   // Remove duplicate, use only filteredUsers for totalPages
   // Add continuous numbering to paginated users
-  const [total, setTotal] = useState<number>(0);
   let paginatedUsers: User[] = [];
   let totalPages = typeof total === "number" && total > 0 ? Math.ceil(total / ITEMS_PER_PAGE) : 1;
 

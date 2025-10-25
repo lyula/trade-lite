@@ -9,6 +9,7 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Wallets = () => {
   const [wallets, setWallets] = useState([]);
+  // Start on the last page by default (newest records)
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [total, setTotal] = useState(0);
@@ -21,27 +22,44 @@ const Wallets = () => {
   useEffect(() => {
     async function fetchWallets() {
       setLoading(true);
-      const res = await fetch(`${API_URL}/api/wallets/all?page=${page}&limit=${limit}&prefetch=10`);
+      let fetchPage = page;
+      // If total is not known, fetch page 1 to get total
+      if (total === 0) fetchPage = 1;
+      const res = await fetch(`${API_URL}/api/wallets/all?page=${fetchPage}&limit=${limit}&prefetch=10`);
       const data = await res.json();
       if (data.success) {
-        // Cache all pages in the prefetch range
         let cache = { ...pageCache };
-        for (let p = data.startPage || page; p <= (data.endPage || page); p++) {
-          const startIdx = (p - (data.startPage || page)) * limit;
-          cache[p] = data.wallets.slice(startIdx, startIdx + limit);
+        // Oldest records first
+        const allWallets = [...data.wallets];
+        // If total is not set, set it and jump to last page
+        if (total === 0 && data.total) {
+          setTotal(data.total);
+          const lastPage = Math.ceil(data.total / limit) || 1;
+          setPage(lastPage);
+          // Don't set cache/wallets yet, will refetch on next render
+          setLoading(false);
+          return;
+        }
+        // Cache all pages in the prefetch range
+        let totalPages = Math.ceil(total / limit) || 1;
+        let prefetchStart = Math.max(1, fetchPage - 10);
+        let prefetchEnd = Math.min(totalPages, fetchPage + 10);
+        for (let p = prefetchStart; p <= prefetchEnd; p++) {
+          const startIdx = (p - 1) * limit;
+          cache[p] = allWallets.slice(startIdx, startIdx + limit);
         }
         setPageCache(cache);
         setWallets(cache[page] || []);
         setTotal(data.total);
         // Calculate total balance for all records
-        const totalBalance = data.wallets.reduce((sum, w) => sum + (parseFloat(w.balance) || 0), 0);
+        const totalBalance = allWallets.reduce((sum, w) => sum + (parseFloat(w.balance) || 0), 0);
         setTotalBalance(totalBalance);
       }
       setLoading(false);
     }
     fetchWallets();
     // eslint-disable-next-line
-  }, [page, limit]);
+  }, [page, limit, total]);
 
   return (
     <AdminDashboardLayout>
@@ -63,9 +81,9 @@ const Wallets = () => {
               </tr>
             </thead>
             <tbody>
-              {wallets.map(w => (
+              {wallets.map((w, idx) => (
                 <tr key={w._id} className="border-b">
-                  <td className="px-4 py-2">{w.number}</td>
+                  <td className="px-4 py-2">{total - ((page - 1) * limit + idx)}</td>
                   <td className="px-4 py-2 font-mono font-bold">{w.walletId}</td>
                   <td className="px-4 py-2">{w.user?.firstName} {w.user?.lastName} <br /><span className="text-xs text-muted-foreground">{w.user?.email}</span></td>
                   <td className="px-4 py-2">{w.currency}</td>
@@ -86,7 +104,7 @@ const Wallets = () => {
           <button
             className="px-4 py-2 bg-muted rounded disabled:opacity-50"
             onClick={() => setPage(page + 1)}
-            disabled={page * limit >= total}
+            disabled={page >= Math.ceil(total / limit)}
           >Next</button>
         </div>
       </div>

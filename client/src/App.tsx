@@ -19,6 +19,9 @@ import AdminLiveAccounts from "./pages/admin/LiveAccounts";
 import AdminDeposits from "./pages/admin/Deposits";
 import AdminWithdrawals from "./pages/admin/Withdrawals";
 import Admins from "./pages/admin/Admins";
+import ReferralBonus from "./pages/admin/ReferralBonus";
+import TransfersAdmin from "./pages/admin/Transfers";
+import USDConversion from "./pages/admin/USDConversion";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -69,6 +72,9 @@ const App = () => (
             <Route path="/admin/deposits" element={<AdminDeposits />} />
             <Route path="/admin/withdrawals" element={<AdminWithdrawals />} />
             <Route path="/admin/admins" element={<Admins />} />
+            <Route path="/admin/referral-bonus" element={<ReferralBonus />} />
+            <Route path="/admin/transfers" element={<TransfersAdmin />} />
+            <Route path="/admin/usd-conversion" element={<USDConversion />} />
             <Route
               path="/dashboard"
               element={

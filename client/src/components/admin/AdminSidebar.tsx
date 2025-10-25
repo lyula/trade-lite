@@ -16,7 +16,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; s
         {sidebarOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
       </button>
     </div>
-  <nav className="flex flex-col gap-2 font-sans text-base font-medium">
+  <div className="flex-1 overflow-y-auto scrollbar-hide">
+    <nav className="flex flex-col gap-2 font-sans text-base font-medium pb-4">
       <NavLink to="/admin/dashboard" className={({ isActive }) => `flex items-center gap-3 px-2 py-2 rounded transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-muted text-muted-foreground'}` }>
         <Home className="h-5 w-5" />
         {sidebarOpen && <span>Dashboard</span>}
@@ -49,10 +50,23 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; s
         <ArrowUpCircle className="h-5 w-5" />
         {sidebarOpen && <span>Withdrawals</span>}
       </NavLink>
+      <NavLink to="/admin/referral-bonus" className={({ isActive }) => `flex items-center gap-3 px-2 py-2 rounded transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-muted text-muted-foreground'}` }>
+        <CreditCard className="h-5 w-5" />
+        {sidebarOpen && <span>Referral Bonus</span>}
+      </NavLink>
+      <NavLink to="/admin/transfers" className={({ isActive }) => `flex items-center gap-3 px-2 py-2 rounded transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-muted text-muted-foreground'}` }>
+        <List className="h-5 w-5" />
+        {sidebarOpen && <span>Transfers</span>}
+      </NavLink>
+      <NavLink to="/admin/usd-conversion" className={({ isActive }) => `flex items-center gap-3 px-2 py-2 rounded transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'hover:bg-muted text-muted-foreground'}` }>
+        <CreditCard className="h-5 w-5" />
+        {sidebarOpen && <span>USD Conversion</span>}
+      </NavLink>
     </nav>
-      <footer className="mt-auto pt-4 text-center text-xs text-muted-foreground">
-        &copy; {new Date().getFullYear()} EquityVault Admin
-      </footer>
+  </div>
+  <footer className="sticky bottom-0 pt-4 text-center text-xs text-muted-foreground bg-card">
+    &copy; {new Date().getFullYear()} EquityVault Admin
+  </footer>
   </aside>
 );
 

@@ -16,25 +16,38 @@ const DemoAccounts = () => {
   useEffect(() => {
     async function fetchAccounts() {
       setLoading(true);
-      const res = await fetch(`${API_URL}/api/demo-accounts/all?page=${page}&limit=${limit}&prefetch=10`);
+      let fetchPage = page;
+      if (total === 0) fetchPage = 1;
+      const res = await fetch(`${API_URL}/api/demo-accounts/all?page=${fetchPage}&limit=${limit}&prefetch=10`);
       const data = await res.json();
       if (data.success) {
         let cache = { ...pageCache };
-        for (let p = data.startPage; p <= data.endPage; p++) {
-          const startIdx = (p - data.startPage) * limit;
-          cache[p] = data.accounts.slice(startIdx, startIdx + limit);
+        const allAccounts = [...data.accounts];
+        if (total === 0 && data.total) {
+          setTotal(data.total);
+          const lastPage = Math.ceil(data.total / limit) || 1;
+          setPage(lastPage);
+          setLoading(false);
+          return;
+        }
+        let totalPages = Math.ceil(total / limit) || 1;
+        let prefetchStart = Math.max(1, fetchPage - 10);
+        let prefetchEnd = Math.min(totalPages, fetchPage + 10);
+        for (let p = prefetchStart; p <= prefetchEnd; p++) {
+          const startIdx = (p - 1) * limit;
+          cache[p] = allAccounts.slice(startIdx, startIdx + limit);
         }
         setPageCache(cache);
         setAccounts(cache[page] || []);
         setTotal(data.total);
-        const totalBalance = data.accounts.reduce((sum, acc) => sum + (parseFloat(acc.balance) || 0), 0);
+        const totalBalance = allAccounts.reduce((sum, acc) => sum + (parseFloat(acc.balance) || 0), 0);
         setTotalBalance(totalBalance);
       }
       setLoading(false);
     }
     fetchAccounts();
     // eslint-disable-next-line
-  }, [page, limit]);
+  }, [page, limit, total]);
 
   return (
     <AdminDashboardLayout>
@@ -60,9 +73,9 @@ const DemoAccounts = () => {
               </tr>
             </thead>
             <tbody>
-              {accounts.map(acc => (
+              {accounts.map((acc, idx) => (
                 <tr key={acc._id} className="border-b">
-                  <td className="px-4 py-2">{acc.number}</td>
+                  <td className="px-4 py-2">{total - ((page - 1) * limit + idx)}</td>
                   <td className="px-4 py-2 font-mono font-bold">{acc.tradingAccountNumber}</td>
                   <td className="px-4 py-2">{acc.firstName} <br /><span className="text-xs text-muted-foreground">{acc.user?.email}</span></td>
                   <td className="px-4 py-2">{acc.accountType}</td>
@@ -87,7 +100,7 @@ const DemoAccounts = () => {
           <button
             className="px-4 py-2 bg-muted rounded disabled:opacity-50"
             onClick={() => setPage(page + 1)}
-            disabled={page * limit >= total}
+            disabled={page >= Math.ceil(total / limit)}
           >Next</button>
         </div>
       </div>
