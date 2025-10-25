@@ -6,18 +6,41 @@ import { useNavigate } from "react-router-dom";
 const AdminDashboard = () => {
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
   const [totalAdmins, setTotalAdmins] = useState<number | null>(null);
+  const [totalLiveAccounts, setTotalLiveAccounts] = useState<number | null>(null);
+  const [totalDemoAccounts, setTotalDemoAccounts] = useState<number | null>(null);
+  const [totalWallets, setTotalWallets] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Users
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users?page=1&limit=1`)
       .then((res) => res.json())
       .then((data) => {
         if (typeof data.total === "number") setTotalUsers(data.total);
       });
+    // Admins
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/list`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data.admins)) setTotalAdmins(data.admins.length);
+      });
+    // Live Accounts
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/live-accounts/all?page=1&limit=1`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.total === "number") setTotalLiveAccounts(data.total);
+      });
+    // Demo Accounts
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/demo-accounts/all?page=1&limit=1`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.total === "number") setTotalDemoAccounts(data.total);
+      });
+    // Wallets
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/wallets/all?page=1&limit=1`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.total === "number") setTotalWallets(data.total);
       });
   }, []);
 
@@ -57,21 +80,21 @@ const AdminDashboard = () => {
           onClick={() => navigate("/admin/live-accounts")}
         >
           <h2 className="text-lg font-bold mb-2">Live Accounts</h2>
-          <p className="text-3xl font-bold">--</p>
+          <p className="text-3xl font-bold">{totalLiveAccounts !== null ? totalLiveAccounts : "--"}</p>
         </div>
         <div
           className="bg-card rounded-lg p-6 shadow cursor-pointer hover:bg-muted/50 transition"
           onClick={() => navigate("/admin/demo-accounts")}
         >
           <h2 className="text-lg font-bold mb-2">Demo Accounts</h2>
-          <p className="text-3xl font-bold">--</p>
+          <p className="text-3xl font-bold">{totalDemoAccounts !== null ? totalDemoAccounts : "--"}</p>
         </div>
         <div
           className="bg-card rounded-lg p-6 shadow cursor-pointer hover:bg-muted/50 transition"
           onClick={() => navigate("/admin/wallets")}
         >
           <h2 className="text-lg font-bold mb-2">Wallets</h2>
-          <p className="text-3xl font-bold">--</p>
+          <p className="text-3xl font-bold">{totalWallets !== null ? totalWallets : "--"}</p>
         </div>
       </div>
       <div className="mt-8">
