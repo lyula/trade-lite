@@ -23,7 +23,7 @@ const AdminDashboard = () => {
 
   return (
     <AdminDashboardLayout>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div
           className="bg-card rounded-lg p-6 shadow cursor-pointer hover:bg-muted/50 transition"
           onClick={() => navigate("/admin/users")}
@@ -64,6 +64,13 @@ const AdminDashboard = () => {
           onClick={() => navigate("/admin/demo-accounts")}
         >
           <h2 className="text-lg font-bold mb-2">Demo Accounts</h2>
+          <p className="text-3xl font-bold">--</p>
+        </div>
+        <div
+          className="bg-card rounded-lg p-6 shadow cursor-pointer hover:bg-muted/50 transition"
+          onClick={() => navigate("/admin/wallets")}
+        >
+          <h2 className="text-lg font-bold mb-2">Wallets</h2>
           <p className="text-3xl font-bold">--</p>
         </div>
       </div>
