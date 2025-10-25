@@ -19,7 +19,7 @@ const CreateAccountPage: React.FC = () => {
   const typeParam = params.get("type") === "demo" ? "demo" : "live";
   const [form, setForm] = useState({
     accountType: "standard",
-    currency: "USD",
+    currency: typeParam === "demo" ? "USD" : "USD",
     leverage: "1:400",
     platform: "web-based"
   });
@@ -115,15 +115,25 @@ const CreateAccountPage: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium">Currency</label>
-              <select
-                name="currency"
-                value={form.currency}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2 text-lg"
-              >
-                <option value="USD">USD</option>
-                <option value="KES">KES</option>
-              </select>
+              {typeParam === "demo" ? (
+                <input
+                  type="text"
+                  name="currency"
+                  value="USD"
+                  readOnly
+                  className="w-full border rounded px-3 py-2 text-lg bg-gray-100"
+                />
+              ) : (
+                <select
+                  name="currency"
+                  value={form.currency}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 text-lg"
+                >
+                  <option value="USD">USD</option>
+                  <option value="KES">KES</option>
+                </select>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium">Leverage</label>

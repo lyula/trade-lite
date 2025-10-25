@@ -1,3 +1,35 @@
+// GET all demo accounts (admin view) with pagination and ordering
+exports.getAllDemoAccounts = async (req, res) => {
+  try {
+    let { page = 1, limit = 20, sort = "createdAt" } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    // Prefetch previous 10, current, and next 10 pages
+    let { prefetch = 10 } = req.query;
+    prefetch = parseInt(prefetch);
+    const startPage = Math.max(1, page - prefetch);
+    const endPage = page + prefetch;
+    const total = await DemoAccount.countDocuments();
+    const allAccounts = await DemoAccount.find({})
+      .sort({ createdAt: 1 });
+
+    // Slice for requested pages
+    const pagedAccounts = allAccounts.slice((startPage - 1) * limit, endPage * limit);
+
+    // Reverse for display: oldest at bottom, newest at top
+    const reversedAccounts = [...pagedAccounts].reverse();
+
+    // Numbering: oldest is #1, newest is #total
+    const numberedAccounts = reversedAccounts.map((acc, idx) => ({
+      number: total - ((startPage - 1) * limit + idx),
+      ...acc._doc,
+    }));
+
+    res.json({ success: true, accounts: numberedAccounts, total, startPage, endPage });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 // DELETE demo account by ID
 exports.deleteDemoAccount = async (req, res) => {
   try {
