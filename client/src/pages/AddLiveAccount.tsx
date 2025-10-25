@@ -1,24 +1,69 @@
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
+
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const AddLiveAccount = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedMode, setSelectedMode] = useState("manual");
   const [selectedAccountType, setSelectedAccountType] = useState("standard");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [platform, setPlatform] = useState("web-based");
 
-  const handleSubmit = () => {
-    // Handle account creation logic here
-    console.log({
-      mode: selectedMode,
-      accountType: selectedAccountType,
-      currency: selectedCurrency,
-    });
-    // Navigate back to dashboard after creation
-    navigate("/dashboard");
+  const handleSubmit = async () => {
+    // Replace with actual API call
+    try {
+      const res = await fetch(`${API_URL}/api/live-accounts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // Add required fields here, e.g. userId, accountType, currency, leverage
+          accountType: selectedAccountType,
+          currency: selectedCurrency,
+          leverage: "1:400", // or get from state if needed
+          platform,
+          // userId: ... (get from context if needed)
+        }),
+      });
+          {/* Platform Selection */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">Platform</h2>
+            <select
+              value={platform}
+              onChange={e => setPlatform(e.target.value)}
+              className="w-full border rounded px-2 py-2"
+            >
+              <option value="web-based">Web-based</option>
+              <option value="automated">Automated Environment</option>
+            </select>
+          </div>
+      const data = await res.json();
+      if (data.success) {
+        toast({
+          title: "Account created successfully",
+          description: "Your live trading account has been created.",
+          duration: 4000,
+        });
+        navigate("/dashboard");
+      } else {
+        toast({
+          title: "Account creation failed",
+          description: data.error || "Unknown error",
+          duration: 4000,
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Network error",
+        description: String(err),
+        duration: 4000,
+      });
+    }
   };
 
   return (

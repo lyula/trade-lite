@@ -5,21 +5,50 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const AddDemoAccount = () => {
   const navigate = useNavigate();
   const [selectedMode, setSelectedMode] = useState("demo");
   const [selectedAccountType, setSelectedAccountType] = useState("standard");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [platform, setPlatform] = useState("web-based");
 
-  const handleSubmit = () => {
-    // Handle demo account creation logic here
-    console.log({
-      mode: selectedMode,
-      accountType: selectedAccountType,
-      currency: selectedCurrency,
-    });
-    navigate("/dashboard");
+  const handleSubmit = async () => {
+    // Replace with actual API call
+    try {
+      const res = await fetch(`${API_URL}/api/demo-accounts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accountType: selectedAccountType,
+          currency: selectedCurrency,
+          leverage: "1:400", // or get from state if needed
+          platform,
+          // userId: ... (get from context if needed)
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        navigate("/dashboard");
+      } else {
+        alert("Demo account creation failed: " + (data.error || "Unknown error"));
+      }
+    } catch (err) {
+      alert("Network error: " + err);
+    }
   };
+          {/* Platform Selection */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">Platform</h2>
+            <select
+              value={platform}
+              onChange={e => setPlatform(e.target.value)}
+              className="w-full border rounded px-2 py-2"
+            >
+              <option value="web-based">Web-based</option>
+              <option value="automated">Automated Environment</option>
+            </select>
+          </div>
 
   return (
     <div className="min-h-screen bg-background p-6">

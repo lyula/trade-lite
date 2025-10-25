@@ -35,6 +35,15 @@ app.use("/api/auth", authRoutes);
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
 
+
+// Live account routes
+const liveAccountRoutes = require('./routes/liveAccount');
+app.use('/api/live-accounts', liveAccountRoutes);
+
+// Demo account routes
+const demoAccountRoutes = require('./routes/demoAccount');
+app.use('/api/demo-accounts', demoAccountRoutes);
+
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     cors(corsOptions)(req, res, next);

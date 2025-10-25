@@ -7,11 +7,40 @@ import WalletCard from "@/components/dashboard/WalletCard";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useUserContext } from "@/context/UserContext";
 
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [liveAccounts, setLiveAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    async function fetchLiveAccounts() {
+      if (!user || !user.id) {
+        setLiveAccounts([]);
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch(`${API_URL}/api/live-accounts?userId=${user.id}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.accounts)) {
+          setLiveAccounts(data.accounts);
+        } else {
+          setLiveAccounts([]);
+        }
+      } catch {
+        setLiveAccounts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchLiveAccounts();
+  }, [user]);
 
   return (
     <div className="space-y-6">
@@ -120,15 +149,59 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Account Details Header */}
-        <div className="hidden rounded-lg bg-muted/50 p-4 md:block">
-          <div className="grid grid-cols-[auto,1fr,auto,auto,auto,auto,auto,auto] gap-4 text-sm font-medium text-muted-foreground">
-            <div>Account Details</div>
-          </div>
+        {/* Live accounts table layout */}
+        <div className="rounded-lg overflow-x-auto border bg-white">
+          <table className="min-w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr className="text-muted-foreground">
+                <th className="px-4 py-2 text-left">Account Details</th>
+                <th className="px-4 py-2 text-left">Leverage</th>
+                <th className="px-4 py-2 text-left">Equity</th>
+                <th className="px-4 py-2 text-left">Balance</th>
+                <th className="px-4 py-2 text-left">Margin</th>
+                <th className="px-4 py-2 text-left">Credit</th>
+                <th className="px-4 py-2 text-left">Platforms</th>
+                <th className="px-4 py-2 text-left">Action</th>
+                <th className="px-4 py-2 text-left">Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={9} className="text-center py-6">Loading live accounts...</td></tr>
+              ) : liveAccounts.length === 0 ? (
+                <tr><td colSpan={9} className="text-center py-6">No live accounts yet.</td></tr>
+              ) : (
+                liveAccounts.map(account => (
+                  <tr key={account._id} className="border-b">
+                    <td className="px-4 py-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="bg-success/10 text-success">{account.currency}</Badge>
+                        <span className="font-semibold">{account.tradingAccountNumber}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground">{account.accountType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+                    </td>
+                    <td className="px-4 py-2">{account.leverage}</td>
+                    <td className="px-4 py-2">0.00</td>
+                    <td className="px-4 py-2">0.0000</td>
+                    <td className="px-4 py-2">0.00</td>
+                    <td className="px-4 py-2">0.00</td>
+                    <td className="px-4 py-2">
+                      <span className="font-semibold">{account.platform === 'automated' ? 'MT5' : 'WebTrader'}</span>
+                    </td>
+                    <td className="px-4 py-2">
+                      <Button size="sm" variant="outline">Deposit</Button>
+                    </td>
+                    <td className="px-4 py-2 flex gap-2">
+                      <Button size="icon" variant="ghost"><span role="img" aria-label="sync">🔄</span></Button>
+                      <Button size="icon" variant="ghost"><span role="img" aria-label="options">⋮</span></Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+              {/* Removed duplicate Total row below live accounts */}
+            </tbody>
+          </table>
         </div>
-
-        {/* No live accounts by default */}
-        <div className="text-center text-muted-foreground py-6">No live accounts yet.</div>
       </div>
 
       {/* Demo Accounts */}

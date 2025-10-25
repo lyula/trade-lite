@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api/auth`;
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 
 // Register user
 export const registerUser = async (userData: any) => {
@@ -16,13 +16,13 @@ export const loginUser = async (credentials: any) => {
 
 // Get all users
 export async function getAllUsers() {
-  const res = await axios.get('/api/users');
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`);
   return res.data;
 }
 
 // Create or sync user
 export async function createOrSyncUser(clerkId: string, firstName: string, lastName: string) {
-  return axios.post('/api/users/signup', {
+  return axios.post(`${import.meta.env.VITE_API_URL}/api/users/signup`, {
     clerkId,
     firstName,
     lastName,

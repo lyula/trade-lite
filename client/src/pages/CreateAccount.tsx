@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+// Read backend URL from .env
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useUserContext } from "@/context/UserContext";
 
 const typeLabels = {
   live: "Live Account",
@@ -17,17 +21,62 @@ const CreateAccountPage: React.FC = () => {
     accountType: "standard",
     currency: "USD",
     leverage: "1:400",
+    platform: "web-based"
   });
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user } = useUserContext();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let platform = form.platform;
+    if (name === "accountType") {
+      if (value.startsWith("automated")) {
+        platform = "automated";
+      } else {
+        platform = "web-based";
+      }
+    }
+    setForm({ ...form, [name]: value, platform });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: handle account creation logic here
-    navigate("/dashboard");
+    if (user) {
+      try {
+        const endpoint = typeParam === "live"
+          ? `${API_URL}/api/live-accounts`
+          : `${API_URL}/api/demo-accounts`;
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            accountType: form.accountType,
+            currency: form.currency,
+            leverage: form.leverage,
+            platform: form.platform
+          }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast({
+            title: "Account created successfully",
+            description: "Your account has been created.",
+            duration: 2000,
+          });
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 2000);
+        } else {
+          alert("Account creation failed: " + (data.error || "Unknown error"));
+        }
+      } catch (err) {
+        alert("Network error: " + err);
+      }
+    }
   };
 
   return (
@@ -91,6 +140,16 @@ const CreateAccountPage: React.FC = () => {
                 <option value="1:1000">1:1000</option>
                 <option value="1:2000">1:2000</option>
               </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Platform</label>
+              <input
+                type="text"
+                name="platform"
+                value={form.platform === "automated" ? "Automated Environment" : "Web-based"}
+                readOnly
+                className="w-full border rounded px-3 py-2 text-lg bg-gray-100"
+              />
             </div>
             <Button type="submit" className="w-full mt-4">Create {typeLabels[typeParam]}</Button>
           </form>
