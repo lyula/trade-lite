@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+
+
+
 const DemoAccountSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   firstName: { type: String, required: true },
@@ -8,6 +11,10 @@ const DemoAccountSchema = new mongoose.Schema({
   leverage: { type: String, required: true },
   platform: { type: String, enum: ['web-based', 'automated'], required: true },
   tradingAccountNumber: { type: String, required: true, unique: true },
+  equity: { type: Number, default: 0 },
+  balance: { type: Number, default: 0 },
+  margin: { type: Number, default: 0 },
+  credit: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 

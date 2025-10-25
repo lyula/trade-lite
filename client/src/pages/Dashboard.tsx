@@ -151,27 +151,27 @@ const Dashboard = () => {
 
         {/* Live accounts table layout */}
         <div className="rounded-lg overflow-x-auto border bg-white">
-          <table className="min-w-full text-sm">
-            <thead className="bg-muted/50">
-              <tr className="text-muted-foreground">
-                <th className="px-4 py-2 text-left">Account Details</th>
-                <th className="px-4 py-2 text-left">Leverage</th>
-                <th className="px-4 py-2 text-left">Equity</th>
-                <th className="px-4 py-2 text-left">Balance</th>
-                <th className="px-4 py-2 text-left">Margin</th>
-                <th className="px-4 py-2 text-left">Credit</th>
-                <th className="px-4 py-2 text-left">Platforms</th>
-                <th className="px-4 py-2 text-left">Action</th>
-                <th className="px-4 py-2 text-left">Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={9} className="text-center py-6">Loading live accounts...</td></tr>
-              ) : liveAccounts.length === 0 ? (
-                <tr><td colSpan={9} className="text-center py-6">No live accounts yet.</td></tr>
-              ) : (
-                liveAccounts.map(account => (
+          {loading ? (
+            <div className="text-center py-6">Loading live accounts...</div>
+          ) : liveAccounts.length === 0 ? (
+            <div className="text-center py-6">No live accounts yet.</div>
+          ) : (
+            <table className="min-w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr className="text-muted-foreground">
+                  <th className="px-4 py-2 text-left">Account Details</th>
+                  <th className="px-4 py-2 text-left">Leverage</th>
+                  <th className="px-4 py-2 text-left">Equity</th>
+                  <th className="px-4 py-2 text-left">Balance</th>
+                  <th className="px-4 py-2 text-left">Margin</th>
+                  <th className="px-4 py-2 text-left">Credit</th>
+                  <th className="px-4 py-2 text-left">Platforms</th>
+                  <th className="px-4 py-2 text-left">Action</th>
+                  <th className="px-4 py-2 text-left">Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                {liveAccounts.map(account => (
                   <tr key={account._id} className="border-b">
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ const Dashboard = () => {
                     <td className="px-4 py-2">0.00</td>
                     <td className="px-4 py-2">0.00</td>
                     <td className="px-4 py-2">
-                      <span className="font-semibold">{account.platform === 'automated' ? 'MT5' : 'WebTrader'}</span>
+                      <span className="font-semibold">{account.platform}</span>
                     </td>
                     <td className="px-4 py-2">
                       <Button size="sm" variant="outline">Deposit</Button>
@@ -196,11 +196,10 @@ const Dashboard = () => {
                       <Button size="icon" variant="ghost"><span role="img" aria-label="options">⋮</span></Button>
                     </td>
                   </tr>
-                ))
-              )}
-              {/* Removed duplicate Total row below live accounts */}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
@@ -260,38 +259,16 @@ const Dashboard = () => {
         <div className="text-center text-muted-foreground py-6">No demo accounts yet.</div>
       </div>
 
-
-      {/* Wallet Accounts */}
+      {/* Wallets */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Wallet Accounts</h2>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="gap-2"
-            onClick={() => navigate("/dashboard/create-wallet")}
-          >
-            <Plus className="h-4 w-4" />
-            Create Account
-          </Button>
-        </div>
-
-        {/* No wallet accounts by default */}
-        <div className="text-center text-muted-foreground py-6">No wallet account yet.</div>
+        <h2 className="text-2xl font-bold">Wallets</h2>
+        <Card className="bg-muted/30">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Recent Activity</CardTitle>
+            {/* Hide View More if no activity */}
+          </CardHeader>
+        </Card>
       </div>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Recent Activity</CardTitle>
-          {/* Hide View More if no activity */}
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <div className="text-center text-muted-foreground py-6">
-            No recent activity yet.
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

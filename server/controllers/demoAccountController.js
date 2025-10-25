@@ -29,7 +29,11 @@ exports.createDemoAccount = async (req, res) => {
       currency,
       leverage,
       platform,
-      tradingAccountNumber
+      tradingAccountNumber,
+      equity: 0,
+      balance: 0,
+      margin: 0,
+      credit: 0
     });
     await demoAccount.save();
     res.status(201).json({ success: true, account: demoAccount });
