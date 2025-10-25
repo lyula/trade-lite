@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Wallet, ArrowLeftRight, Lock, Smartphone } from "lucide-react";
-import walletImage from "@/assets/wallet-feature.jpg";
+import walletImage from "@/assets/wallet-feature.jpg.jpg";
 
 const Features = () => {
   const features = [
