@@ -2,6 +2,7 @@ const Admin = require('../models/Admin');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 const registerAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,4 +43,14 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-module.exports = { registerAdmin, loginAdmin };
+// Get all admins
+const getAllAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.find({}, { password: 0 }).sort({ _id: -1 }); // Newest first
+    res.status(200).json({ admins });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+module.exports = { registerAdmin, loginAdmin, getAllAdmins };
