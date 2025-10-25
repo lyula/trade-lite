@@ -6,6 +6,15 @@ const NotFound = () => {
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    // Set favicon to the correct logo
+    const favicon = document.querySelector("link[rel='icon']");
+    if (favicon) {
+      favicon.setAttribute("href", "/lite-logo.jpg");
+      favicon.setAttribute("type", "image/jpeg");
+    }
+    return () => {
+      // Optionally reset favicon if needed
+    };
   }, [location.pathname]);
 
   return (
