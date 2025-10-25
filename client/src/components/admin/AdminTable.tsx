@@ -17,7 +17,7 @@ function AdminTable<T extends { _id?: string; id?: string | number; number?: num
         <thead className="bg-muted">
           <tr>
             {columns.map((col) => (
-              <th key={col.header} className="px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th key={col.header} className="px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider align-middle">
                 {col.header}
               </th>
             ))}
@@ -27,7 +27,7 @@ function AdminTable<T extends { _id?: string; id?: string | number; number?: num
           {data.map((row) => (
             <tr key={row._id ?? row.id} className="hover:bg-muted/50">
               {columns.map((col) => (
-                <td key={String(col.accessor)} className="px-4 py-2 whitespace-nowrap">
+                <td key={String(col.accessor)} className="px-4 py-2 whitespace-nowrap text-left align-middle">
                   {col.accessor === "number"
                     ? row.number ?? ""
                     : col.accessor === "walletBalance"

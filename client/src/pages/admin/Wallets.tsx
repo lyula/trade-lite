@@ -72,23 +72,23 @@ const Wallets = () => {
           <table className="min-w-full text-sm border">
             <thead className="bg-muted/50">
               <tr>
-                <th className="px-4 py-2">#</th>
-                <th className="px-4 py-2">Wallet ID</th>
-                <th className="px-4 py-2">User</th>
-                <th className="px-4 py-2">Currency</th>
-                <th className="px-4 py-2">Balance</th>
-                <th className="px-4 py-2">Created</th>
+                <th className="px-4 py-2 text-left">#</th>
+                <th className="px-4 py-2 text-left">Wallet ID</th>
+                <th className="px-4 py-2 text-left">User</th>
+                <th className="px-4 py-2 text-left">Currency</th>
+                <th className="px-4 py-2 text-left">Balance</th>
+                <th className="px-4 py-2 text-left">Created</th>
               </tr>
             </thead>
             <tbody>
               {wallets.map((w, idx) => (
                 <tr key={w._id} className="border-b">
-                  <td className="px-4 py-2">{total - ((page - 1) * limit + idx)}</td>
-                  <td className="px-4 py-2 font-mono font-bold">{w.walletId}</td>
-                  <td className="px-4 py-2">{w.user?.firstName} {w.user?.lastName} <br /><span className="text-xs text-muted-foreground">{w.user?.email}</span></td>
-                  <td className="px-4 py-2">{w.currency}</td>
-                  <td className="px-4 py-2">{w.balance}</td>
-                  <td className="px-4 py-2">{new Date(w.createdAt).toLocaleString()}</td>
+                  <td className="px-4 py-2 text-left">{total - ((page - 1) * limit + idx)}</td>
+                  <td className="px-4 py-2 font-mono font-bold text-left">{w.walletId}</td>
+                  <td className="px-4 py-2 text-left">{w.user?.firstName} {w.user?.lastName} <br /><span className="text-xs text-muted-foreground">{w.user?.email}</span></td>
+                  <td className="px-4 py-2 text-left">{w.currency}</td>
+                  <td className="px-4 py-2 text-left">{w.balance}</td>
+                  <td className="px-4 py-2 text-left">{new Date(w.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

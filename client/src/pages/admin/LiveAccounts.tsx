@@ -65,35 +65,35 @@ const LiveAccounts = () => {
           <table className="min-w-full text-sm border">
             <thead className="bg-muted/50">
               <tr>
-                <th className="px-4 py-2">#</th>
-                <th className="px-4 py-2">Account Number</th>
-                <th className="px-4 py-2">User</th>
-                <th className="px-4 py-2">Type</th>
-                <th className="px-4 py-2">Currency</th>
-                <th className="px-4 py-2">Leverage</th>
-                <th className="px-4 py-2">Equity</th>
-                <th className="px-4 py-2">Balance</th>
-                {/* <th className="px-4 py-2">Margin</th> */}
-                {/* <th className="px-4 py-2">Credit</th> */}
-                <th className="px-4 py-2">Platform</th>
-                <th className="px-4 py-2">Created</th>
+                <th className="px-4 py-2 text-left">#</th>
+                <th className="px-4 py-2 text-left">Account Number</th>
+                <th className="px-4 py-2 text-left">User</th>
+                <th className="px-4 py-2 text-left">Type</th>
+                <th className="px-4 py-2 text-left">Currency</th>
+                <th className="px-4 py-2 text-left">Leverage</th>
+                <th className="px-4 py-2 text-left">Equity</th>
+                <th className="px-4 py-2 text-left">Balance</th>
+                {/* <th className="px-4 py-2 text-left">Margin</th> */}
+                {/* <th className="px-4 py-2 text-left">Credit</th> */}
+                <th className="px-4 py-2 text-left">Platform</th>
+                <th className="px-4 py-2 text-left">Created</th>
               </tr>
             </thead>
             <tbody>
               {accounts.map((acc, idx) => (
                 <tr key={acc._id} className="border-b">
-                  <td className="px-4 py-2">{total - ((page - 1) * limit + idx)}</td>
-                  <td className="px-4 py-2 font-mono font-bold">{acc.tradingAccountNumber}</td>
-                  <td className="px-4 py-2">{acc.user?.firstName} {acc.user?.lastName} <br /><span className="text-xs text-muted-foreground">{acc.user?.email}</span></td>
-                  <td className="px-4 py-2">{acc.accountType}</td>
-                  <td className="px-4 py-2">{acc.currency}</td>
-                  <td className="px-4 py-2">{acc.leverage}</td>
-                  <td className="px-4 py-2">{acc.equity}</td>
-                  <td className="px-4 py-2">{acc.balance}</td>
-                  {/* <td className="px-4 py-2">{acc.margin}</td> */}
-                  {/* <td className="px-4 py-2">{acc.credit}</td> */}
-                  <td className="px-4 py-2">{acc.platform}</td>
-                  <td className="px-4 py-2">{new Date(acc.createdAt).toLocaleString()}</td>
+                  <td className="px-4 py-2 text-left">{total - ((page - 1) * limit + idx)}</td>
+                  <td className="px-4 py-2 font-mono font-bold text-left">{acc.tradingAccountNumber}</td>
+                  <td className="px-4 py-2 text-left">{acc.user?.firstName} {acc.user?.lastName} <br /><span className="text-xs text-muted-foreground">{acc.user?.email}</span></td>
+                  <td className="px-4 py-2 text-left">{acc.accountType}</td>
+                  <td className="px-4 py-2 text-left">{acc.currency}</td>
+                  <td className="px-4 py-2 text-left">{acc.leverage}</td>
+                  <td className="px-4 py-2 text-left">{acc.equity}</td>
+                  <td className="px-4 py-2 text-left">{acc.balance}</td>
+                  {/* <td className="px-4 py-2 text-left">{acc.margin}</td> */}
+                  {/* <td className="px-4 py-2 text-left">{acc.credit}</td> */}
+                  <td className="px-4 py-2 text-left">{acc.platform}</td>
+                  <td className="px-4 py-2 text-left">{new Date(acc.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
