@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,11 +8,33 @@ import { Select } from "@/components/ui/select";
 
 const DepositToAccount = () => {
   const navigate = useNavigate();
-  const [selectedAccount, setSelectedAccount] = useState("W-0961795-002 Wallet (KES 0.0000)");
+  const [selectedAccount, setSelectedAccount] = useState("");
   const [depositAmount, setDepositAmount] = useState(50000);
   const [customAmount, setCustomAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [phone, setPhone] = useState("");
+  const [wallets, setWallets] = useState([]);
+  const { user } = useUserContext();
+  useEffect(() => {
+    async function fetchWallets() {
+      if (!user || !user.id) {
+        setWallets([]);
+        return;
+      }
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/wallets?userId=${user.id}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.wallets)) {
+          setWallets(data.wallets);
+        } else {
+          setWallets([]);
+        }
+      } catch {
+        setWallets([]);
+      }
+    }
+    fetchWallets();
+  }, [user]);
 
   const handlePreset = (amount: number) => {
     setDepositAmount(amount);
@@ -40,10 +63,12 @@ const DepositToAccount = () => {
                 onChange={(e) => setSelectedAccount(e.target.value)}
                 className="w-full border rounded px-3 py-2 text-lg"
               >
-                <option value="">Select an Account</option>
-                <option value="W-0961795-002 Wallet (KES 0.0000)">W-0961795-002 Wallet (KES 0.0000)</option>
-                <option value="W-0961795-003 Wallet (USD 0.0000)">W-0961795-003 Wallet (USD 0.0000)</option>
-                {/* Add more accounts dynamically */}
+                <option value="">Select a Wallet Account</option>
+                {wallets.map(wallet => (
+                  <option key={wallet._id} value={wallet.walletId}>
+                    {wallet.walletId} Wallet ({wallet.currency} {wallet.balance?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                  </option>
+                ))}
               </select>
             </div>
 
