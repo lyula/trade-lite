@@ -43,6 +43,7 @@ const liveAccountRoutes = require('./routes/liveAccount');
 const walletRoutes = require('./routes/wallet');
 app.use('/api/wallets', walletRoutes);
 
+
 // Activity routes
 const activityRoutes = require('./routes/activity');
 app.use('/api/activity', activityRoutes);
@@ -52,6 +53,10 @@ app.use('/api/live-accounts', liveAccountRoutes);
 // Demo account routes
 const demoAccountRoutes = require('./routes/demoAccount');
 app.use('/api/demo-accounts', demoAccountRoutes);
+
+// Conversion rate route
+const conversionRoutes = require('./routes/conversion');
+app.use('/api/conversion', conversionRoutes);
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
