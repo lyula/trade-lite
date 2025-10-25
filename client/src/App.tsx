@@ -18,6 +18,7 @@ import AdminDemoAccounts from "./pages/admin/DemoAccounts";
 import AdminLiveAccounts from "./pages/admin/LiveAccounts";
 import AdminDeposits from "./pages/admin/Deposits";
 import AdminWithdrawals from "./pages/admin/Withdrawals";
+import Admins from "./pages/admin/Admins";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Deposits from "./pages/Deposits";
@@ -67,6 +68,7 @@ const App = () => (
             <Route path="/admin/live-accounts" element={<AdminLiveAccounts />} />
             <Route path="/admin/deposits" element={<AdminDeposits />} />
             <Route path="/admin/withdrawals" element={<AdminWithdrawals />} />
+            <Route path="/admin/admins" element={<Admins />} />
             <Route
               path="/dashboard"
               element={

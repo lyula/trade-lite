@@ -25,6 +25,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: { sidebarOpen: boolean; s
         <Users className="h-5 w-5" />
         {sidebarOpen && <span>Users</span>}
       </Link>
+      <Link to="/admin/admins" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
+        <Users className="h-5 w-5" />
+        {sidebarOpen && <span>Admins</span>}
+      </Link>
       <Link to="/admin/wallets" className="flex items-center gap-3 px-2 py-2 rounded hover:bg-muted">
         <Wallet className="h-5 w-5" />
         {sidebarOpen && <span>Wallets</span>}
