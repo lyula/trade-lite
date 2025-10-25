@@ -11,10 +11,9 @@ const DemoAccountSchema = new mongoose.Schema({
   leverage: { type: String, required: true },
   platform: { type: String, enum: ['web-based', 'automated'], required: true },
   tradingAccountNumber: { type: String, required: true, unique: true },
-  equity: { type: Number, default: 0 },
-  balance: { type: Number, default: 0 },
+  equity: { type: Number, default: 10000 },
+  balance: { type: Number, default: 10000 },
   margin: { type: Number, default: 0 },
-  credit: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 

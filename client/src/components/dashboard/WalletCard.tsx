@@ -31,7 +31,7 @@ const WalletCard = ({ currency, accountNumber, balance, currencyColor = "success
           <div className="flex items-center gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Balance</p>
-              <p className="text-xl font-bold">{balance}</p>
+              <p className="text-xl font-bold">{balance}</p> {/* Already formatted with commas */}
             </div>
 
             <div className="flex flex-wrap gap-2">

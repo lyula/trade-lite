@@ -8,6 +8,13 @@ import ActivityItem from "@/components/dashboard/ActivityItem";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+
+// Utility to format numbers with commas
+function formatAmount(amount: number | string, decimals: number = 2) {
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (isNaN(num)) return "0.00";
+  return num.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
 import { useUserContext } from "@/context/UserContext";
 
 
@@ -15,6 +22,7 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Dashboard = () => {
   const navigate = useNavigate();
   const [liveAccounts, setLiveAccounts] = useState([]);
+  const [demoAccounts, setDemoAccounts] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recentActivity, setRecentActivity] = useState({ deposits: [], withdrawals: [] });
@@ -24,6 +32,7 @@ const Dashboard = () => {
     async function fetchLiveAccounts() {
       if (!user || !user.id) {
         setLiveAccounts([]);
+        setDemoAccounts([]);
         setWallets([]);
         setRecentActivity({ deposits: [], withdrawals: [] });
         setLoading(false);
@@ -39,6 +48,17 @@ const Dashboard = () => {
         }
       } catch {
         setLiveAccounts([]);
+      }
+      try {
+        const res = await fetch(`${API_URL}/api/demo-accounts?userId=${user.id}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.accounts)) {
+          setDemoAccounts(data.accounts);
+        } else {
+          setDemoAccounts([]);
+        }
+      } catch {
+        setDemoAccounts([]);
       }
       try {
         const res = await fetch(`${API_URL}/api/wallets?userId=${user.id}`);
@@ -95,24 +115,25 @@ const Dashboard = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {/* Example: Replace with actual totals if available */}
           <StatCard
             title="Total Balance"
-            value="0.00 USD"
+            value={formatAmount(0.00) + " USD"}
             icon={Wallet}
           />
           <StatCard
             title="Total Credit"
-            value="0.00 USD"
+            value={formatAmount(0.00) + " USD"}
             icon={CreditCard}
           />
           <StatCard
             title="Total Equity"
-            value="0.00 USD"
+            value={formatAmount(0.00) + " USD"}
             icon={TrendingUp}
           />
           <StatCard
             title="Total Deposits"
-            value="0.00 USD"
+            value={formatAmount(0.00) + " USD"}
             icon={ArrowDownToLine}
             iconColor="text-success"
           />
@@ -135,38 +156,7 @@ const Dashboard = () => {
             <Plus className="h-4 w-4" />
             Create Account
           </Button>
-
         </div>
-
-        {/* Summary Row */}
-        <Card className="bg-muted/30">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-[auto,1fr,auto,auto,auto,auto] md:items-center">
-              <Badge variant="secondary" className="bg-success/10 text-success w-fit">
-                USD
-              </Badge>
-              <span className="font-semibold">Total</span>
-              <div className="grid grid-cols-4 gap-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">Equity</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Balance</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Margin</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Credit</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Live accounts table layout */}
         <div className="rounded-lg overflow-x-auto border bg-white">
@@ -200,10 +190,10 @@ const Dashboard = () => {
                       <div className="text-xs text-muted-foreground">{account.accountType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
                     </td>
                     <td className="px-4 py-2">{account.leverage}</td>
-                    <td className="px-4 py-2">0.00</td>
-                    <td className="px-4 py-2">0.0000</td>
-                    <td className="px-4 py-2">0.00</td>
-                    <td className="px-4 py-2">0.00</td>
+                    <td className="px-4 py-2">{formatAmount(account.equity ?? 0, 2)}</td>
+                    <td className="px-4 py-2">{formatAmount(account.balance ?? 0, 4)}</td>
+                    <td className="px-4 py-2">{formatAmount(account.margin ?? 0, 2)}</td>
+                    <td className="px-4 py-2">{formatAmount(account.credit ?? 0, 2)}</td>
                     <td className="px-4 py-2">
                       <span className="font-semibold">{account.platform}</span>
                     </td>
@@ -226,56 +216,37 @@ const Dashboard = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Demo Accounts</h2>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="gap-2"
-            onClick={() => navigate("/dashboard/create-account?type=demo")}
+            onClick={() => navigate('/dashboard/create-account?type=demo')}
           >
             <Plus className="h-4 w-4" />
             Create Account
           </Button>
         </div>
-
-        {/* Summary Row */}
-        <Card className="bg-muted/30">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-[auto,1fr,auto,auto,auto,auto] md:items-center">
-              <Badge variant="secondary" className="bg-success/10 text-success w-fit">
-                USD
-              </Badge>
-              <span className="font-semibold">Total</span>
-              <div className="grid grid-cols-4 gap-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">Equity</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Balance</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Margin</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Credit</p>
-                  <p className="font-semibold">0.00</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Account Details Header */}
-        <div className="hidden rounded-lg bg-muted/50 p-4 md:block">
-          <div className="grid grid-cols-[auto,1fr,auto,auto,auto,auto,auto,auto] gap-4 text-sm font-medium text-muted-foreground">
-            <div>Account Details</div>
+        {loading ? (
+          <div className="text-center text-muted-foreground py-6">Loading demo accounts...</div>
+        ) : demoAccounts.length === 0 ? (
+          <div className="text-center text-muted-foreground py-6">No demo accounts yet.</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {demoAccounts.map((account) => (
+              <AccountCard
+                key={account._id}
+                accountNumber={account.tradingAccountNumber}
+                accountType={account.accountType}
+                currency={account.currency}
+                leverage={account.leverage}
+                equity={formatAmount(account.equity ?? 10000, 2)}
+                balance={formatAmount(account.balance ?? 10000, 2)}
+                margin={formatAmount(account.margin ?? 0, 2)}
+                platforms={[account.platform]}
+              />
+            ))}
           </div>
-        </div>
-
-        {/* No demo accounts by default */}
-        <div className="text-center text-muted-foreground py-6">No demo accounts yet.</div>
+        )}
       </div>
 
       {/* Wallet Accounts */}
@@ -303,7 +274,7 @@ const Dashboard = () => {
                 key={wallet._id}
                 currency={wallet.currency}
                 accountNumber={wallet.walletId}
-                balance={wallet.balance?.toFixed(3) ?? "0.000"}
+                balance={formatAmount(wallet.balance ?? 0, 3)}
                 currencyColor={wallet.currency === "KES" ? "warning" : "success"}
               />
             ))}

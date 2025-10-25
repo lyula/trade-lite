@@ -1,12 +1,26 @@
 const DemoAccount = require('../models/DemoAccount');
 const User = require('../models/User');
 
-// Helper to generate unique 7-digit trading account number starting with 677
+// GET demo accounts by userId
+exports.getDemoAccountsByUser = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'Missing userId' });
+    }
+    const accounts = await DemoAccount.find({ userId });
+    res.json({ success: true, accounts });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// Helper to generate unique 7-digit trading account number starting with 834
 async function generateUniqueTradingAccountNumber() {
   let unique = false;
   let accountNumber;
   while (!unique) {
-    accountNumber = '677' + Math.floor(1000 + Math.random() * 9000).toString();
+    accountNumber = '834' + Math.floor(1000 + Math.random() * 9000).toString();
     // Ensure uniqueness
     const exists = await DemoAccount.findOne({ tradingAccountNumber: accountNumber });
     if (!exists) unique = true;
@@ -30,10 +44,9 @@ exports.createDemoAccount = async (req, res) => {
       leverage,
       platform,
       tradingAccountNumber,
-      equity: 0,
-      balance: 0,
-      margin: 0,
-      credit: 0
+      equity: 10000,
+      balance: 10000,
+      margin: 0
     });
     await demoAccount.save();
     res.status(201).json({ success: true, account: demoAccount });

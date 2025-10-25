@@ -48,15 +48,15 @@ const AccountCard = ({
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Equity</p>
-              <p className="font-semibold">{equity}</p>
+              <p className="font-semibold">{equity}</p> {/* Already formatted with commas */}
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Balance</p>
-              <p className="font-semibold">{balance}</p>
+              <p className="font-semibold">{balance}</p> {/* Already formatted with commas */}
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Margin</p>
-              <p className="font-semibold">{margin}</p>
+              <p className="font-semibold">{margin}</p> {/* Already formatted with commas */}
             </div>
           </div>
 
