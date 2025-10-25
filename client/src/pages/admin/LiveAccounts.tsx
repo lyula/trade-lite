@@ -1,5 +1,5 @@
-import React from "react";
 
+import React from "react";
 import AdminDashboardLayout from "@/components/admin/AdminDashboardLayout";
 
 const LiveAccounts = () => {

@@ -5,6 +5,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import AccountCard from "@/components/dashboard/AccountCard";
 import WalletCard from "@/components/dashboard/WalletCard";
 import ActivityItem from "@/components/dashboard/ActivityItem";
+import DeleteAccountModal from "@/components/dashboard/DeleteAccountModal";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -22,6 +23,8 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Dashboard = () => {
   const navigate = useNavigate();
   const [liveAccounts, setLiveAccounts] = useState([]);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
   const [demoAccounts, setDemoAccounts] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -202,10 +205,18 @@ const Dashboard = () => {
                     </td>
                     <td className="px-4 py-2 flex gap-2">
                       <Button size="icon" variant="ghost">
-                        {/* Lucide RefreshCw icon for consistency with AccountCard */}
                         <RefreshCw className="h-4 w-4" />
                       </Button>
-                      <Button size="icon" variant="ghost"><span role="img" aria-label="options">⋮</span></Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => {
+                          setSelectedAccount(account);
+                          setOpenDeleteModal(true);
+                        }}
+                      >
+                        <span role="img" aria-label="options">⋮</span>
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -213,6 +224,18 @@ const Dashboard = () => {
             </table>
           )}
         </div>
+        {/* Delete Modal for Live Accounts */}
+        {selectedAccount && (
+          <DeleteAccountModal
+            open={openDeleteModal}
+            setOpen={setOpenDeleteModal}
+            accountNumber={selectedAccount.tradingAccountNumber}
+            accountType={selectedAccount.accountType}
+            onDelete={(accNum, accType) => {
+              // TODO: Add delete logic for live account here
+            }}
+          />
+        )}
       </div>
 
       {/* Demo Accounts */}

@@ -2,6 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, MoreVertical, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import DeleteAccountModal from "./DeleteAccountModal";
 
 interface AccountCardProps {
   accountNumber: string;
@@ -24,6 +26,7 @@ const AccountCard = ({
   margin,
   platforms,
 }: AccountCardProps) => {
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   return (
     <Card>
       <CardContent className="p-4">
@@ -48,15 +51,15 @@ const AccountCard = ({
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Equity</p>
-              <p className="font-semibold">{equity}</p> {/* Already formatted with commas */}
+              <p className="font-semibold">{equity}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Balance</p>
-              <p className="font-semibold">{balance}</p> {/* Already formatted with commas */}
+              <p className="font-semibold">{balance}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Margin</p>
-              <p className="font-semibold">{margin}</p> {/* Already formatted with commas */}
+              <p className="font-semibold">{margin}</p>
             </div>
           </div>
 
@@ -72,9 +75,19 @@ const AccountCard = ({
             <Button size="icon" variant="ghost">
               <RefreshCw className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="ghost">
+            <Button size="icon" variant="ghost" onClick={() => setOpenDeleteModal(true)}>
               <MoreVertical className="h-4 w-4" />
             </Button>
+            <DeleteAccountModal
+              open={openDeleteModal}
+              setOpen={setOpenDeleteModal}
+              accountNumber={accountNumber}
+              accountType={accountType}
+              onDelete={(accNum, accType) => {
+                // TODO: Add delete logic for accNum and accType here
+                // Example: if (accType === "Live") { ... } else if (accType === "Demo") { ... }
+              }}
+            />
           </div>
         </div>
       </CardContent>
