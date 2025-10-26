@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import zxcvbn from "zxcvbn";
 import { registerUser } from "@/services/userApi";
+import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
@@ -20,6 +21,10 @@ const RegisterCustom = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [customError, setCustomError] = useState("");
   const [customSuccess, setCustomSuccess] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
   const [referredBy, setReferredBy] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +37,9 @@ const RegisterCustom = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCustomError("");
+    setOtpError("");
+    setLoading(true);
 
     if (
       !firstName ||
@@ -52,6 +60,39 @@ const RegisterCustom = () => {
       return;
     }
 
+    // Step 1: Send OTP if not sent
+    if (!otpSent) {
+      try {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/otp/send`, { email });
+        setOtpSent(true);
+        setCustomSuccess("OTP sent to your email. Please enter it below.");
+      } catch (error) {
+        setCustomError(error.response?.data?.error || "Failed to send OTP.");
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Step 2: Verify OTP
+    if (otpSent && !otp) {
+      setOtpError("Please enter the OTP sent to your email.");
+      setLoading(false);
+      return;
+    }
+    try {
+      const verifyRes = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/otp/verify`, { email, code: otp });
+      if (!verifyRes.data.success) {
+        setOtpError("Invalid or expired OTP.");
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      setOtpError(error.response?.data?.error || "Invalid or expired OTP.");
+      setLoading(false);
+      return;
+    }
+
+    // Step 3: Register user
     try {
       const userData = {
         firstName,
@@ -71,6 +112,7 @@ const RegisterCustom = () => {
           "Registration failed. Please try again."
       );
     }
+    setLoading(false);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +157,8 @@ const RegisterCustom = () => {
   }, [customError, customSuccess]);
 
   useEffect(() => {
-    if (customSuccess) {
+    // Only redirect after registration, not after OTP sent
+    if (customSuccess === "Registration successful!") {
       const timer = setTimeout(() => {
         setCustomSuccess("");
         navigate("/login");
@@ -133,7 +176,7 @@ const RegisterCustom = () => {
           Create Your Account
         </h1>
 
-        <form className="space-y-4" onSubmit={handleRegister}>
+  <form className="space-y-4" onSubmit={handleRegister}>
           <div>
             <label className="block text-sm font-medium">First Name</label>
             <Input
@@ -182,6 +225,7 @@ const RegisterCustom = () => {
               placeholder="Enter your email"
               required
               className="w-full border rounded px-3 py-2"
+              disabled={otpSent}
             />
           </div>
 
@@ -272,11 +316,33 @@ const RegisterCustom = () => {
             </span>
           </div>
 
+          {otpSent && (
+            <div>
+              <label className="block text-sm font-medium">Enter OTP</label>
+              <Input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter the OTP sent to your email"
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+              {otpError && (
+                <div className="text-red-500 text-sm mt-1">{otpError}</div>
+              )}
+            </div>
+          )}
           <Button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded"
+            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded flex items-center justify-center"
+            disabled={loading}
           >
-            Register
+            {loading ? (
+              <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+            ) : otpSent ? "Verify & Register" : "Send OTP"}
           </Button>
         </form>
 

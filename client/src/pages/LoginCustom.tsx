@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "@/services/userApi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useUserContext } from "@/context/UserContext";
 import { Link } from "react-router-dom";
 
@@ -13,12 +14,21 @@ const LoginCustom = () => {
   const navigate = useNavigate();
   const { setUser } = useUserContext();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const CustomToast = ({ message }: { message: string }) => (
     <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-md">
       {message}
     </div>
   );
+
+  // Hide error toast after 3 seconds
+  useEffect(() => {
+    if (customError) {
+      const timer = setTimeout(() => setCustomError("") , 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [customError]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +38,13 @@ const LoginCustom = () => {
     }
     setLoading(true);
     try {
+      // Check if email exists
+      const existsRes = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users?email=${encodeURIComponent(email)}`);
+      if (!existsRes.data || existsRes.data.exists !== true) {
+        setCustomError("Account does not exist.");
+        setLoading(false);
+        return;
+      }
       const credentials = { email, password };
       const response = await loginUser(credentials);
       localStorage.setItem("token", response.token);
@@ -66,14 +83,24 @@ const LoginCustom = () => {
 
           <div>
             <label className="block text-sm font-medium">Password</label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              className="w-full border rounded px-3 py-2"
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                tabIndex={-1}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center justify-between">

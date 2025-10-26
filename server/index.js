@@ -1,4 +1,5 @@
 const express = require('express');
+// ...existing code...
 const cors = require('cors');
 const userRoutes = require('./routes/user');
 const authRoutes = require("./routes/auth");
@@ -6,6 +7,8 @@ const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
+// Serve static files (logo)
+app.use('/public', express.static('public'));
 const corsOptions = {
   origin: [
   "https://equityvaultsecurities.vercel.app",
@@ -22,7 +25,12 @@ app.use((req, res, next) => {
     next();
   }
 });
+
 app.use(express.json());
+
+// OTP routes
+const otpRoutes = require('./routes/otp');
+app.use('/api/otp', otpRoutes);
 
 
 // User routes
@@ -54,9 +62,14 @@ app.use('/api/live-accounts', liveAccountRoutes);
 const demoAccountRoutes = require('./routes/demoAccount');
 app.use('/api/demo-accounts', demoAccountRoutes);
 
+
 // Conversion rate route
 const conversionRoutes = require('./routes/conversion');
 app.use('/api/conversion', conversionRoutes);
+
+// Contact form route
+const contactRoutes = require('./routes/contact');
+app.use('/api/contact', contactRoutes);
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {

@@ -38,6 +38,43 @@ exports.register = async (req, res) => {
     const user = new User({ firstName, lastName, gender, email, city, phone, password, referralCode, referredBy });
     await user.save();
 
+    // Send welcome email
+    const nodemailer = require('nodemailer');
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `Equity Vault <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Welcome to EquityVault Securities!",
+      html: `
+        <div style="font-family: Arial, sans-serif; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin: auto; padding: 0;">
+          <div style="background: #fff; border-radius: 8px; padding: 32px 16px 24px 16px; text-align: center;">
+            <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto;" />
+            <h2 style="color: #007bff; margin-bottom: 16px; font-size: 1.5em;">Welcome, ${firstName}!</h2>
+            <p style="font-size: 16px; color: #333; margin-bottom: 24px; text-align: left;">
+              Thank you for registering with <strong>EquityVault Securities</strong>.<br/>
+              Your account has been created successfully.<br/>
+              You can now log in and start using our platform.
+            </p>
+            <p style="font-size: 15px; color: #555; margin-bottom: 32px; text-align: left;">
+              Best regards,<br/>
+              <strong>EquityVault Securities Team</strong>
+            </p>
+          </div>
+          <footer style="background: #fff; border-top: 1px solid #eee; padding: 18px 0 0 0; text-align: center; border-radius: 0 0 8px 8px; font-size: 13px; color: #888; margin-top: 0;">
+            EquityVault Securities &copy; ${new Date().getFullYear()}
+          </footer>
+        </div>
+      `,
+    });
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

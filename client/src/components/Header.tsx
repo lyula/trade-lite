@@ -50,6 +50,12 @@ const Header = () => {
             >
               Bot Trading
             </a>
+            <a
+              href="#contact"
+              className="text-primary font-semibold hover:text-primary-dark transition-colors"
+            >
+              Contact
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
