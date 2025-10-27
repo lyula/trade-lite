@@ -1,3 +1,4 @@
+const { sendAccountEmail } = require('../utils/emailSender');
 // GET all live accounts (admin view) with pagination and ordering
 exports.getAllLiveAccounts = async (req, res) => {
   try {
@@ -77,7 +78,7 @@ async function generateUniqueTradingAccountNumber() {
 
 exports.createLiveAccount = async (req, res) => {
   try {
-  const { userId, accountType, currency, leverage, platform } = req.body;
+    const { userId, accountType, currency, leverage, platform } = req.body;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
@@ -97,6 +98,22 @@ exports.createLiveAccount = async (req, res) => {
       credit: 0
     });
     await liveAccount.save();
+    
+    // Send email to user
+    if (user.email) {
+      const accountDetails = `Account Type: ${liveAccount.accountType}\nCurrency: ${liveAccount.currency}\nLeverage: ${liveAccount.leverage}\nPlatform: ${liveAccount.platform}\nTrading Account Number: ${liveAccount.tradingAccountNumber}`;
+      try {
+        await sendAccountEmail({
+          to: user.email,
+          subject: 'Your Live Trading Account Details',
+          accountDetails,
+          type: 'Live Trading',
+        });
+      } catch (emailErr) {
+        // Optionally log email error
+        console.error('Failed to send live account email:', emailErr);
+      }
+    }
     res.status(201).json({ success: true, account: liveAccount });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

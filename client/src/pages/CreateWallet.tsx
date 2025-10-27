@@ -16,7 +16,7 @@ const CreateWalletPage: React.FC = () => {
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
+  // Remove error state from UI, only use toast
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -26,14 +26,21 @@ const CreateWalletPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
+      toast({
+        title: "Wallet creation failed",
+        description: "Passwords do not match",
+        duration: 4000,
+      });
       return;
     }
     if (!user || !user.id) {
-      setError("User not found. Please log in again.");
+      toast({
+        title: "Wallet creation failed",
+        description: "User not found. Please log in again.",
+        duration: 4000,
+      });
       return;
     }
-    setError("");
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/wallets/create`, {
         method: "POST",
@@ -55,10 +62,23 @@ const CreateWalletPage: React.FC = () => {
           navigate("/dashboard");
         }, 2000);
       } else {
-        setError(data.error || "Failed to create wallet");
+        let errorMsg = data.error || "Failed to create wallet";
+        if (errorMsg.includes("already have a wallet") || errorMsg.includes("Only USD and KES wallets are allowed")) {
+          errorMsg = "You are only entitled to two wallets, one in KES and another in USD.";
+        }
+        toast({
+          title: "Wallet creation failed",
+          description: errorMsg,
+          duration: 4000,
+        });
+  // Do not set error state, only show toast
       }
     } catch (err) {
-      setError("Network error. Please try again.");
+      toast({
+        title: "Wallet creation failed",
+        description: "Network error. Please try again.",
+        duration: 4000,
+      });
     }
   };
 
@@ -125,7 +145,7 @@ const CreateWalletPage: React.FC = () => {
                 </button>
               </div>
             </div>
-            {error && <div className="text-red-500 text-sm">{error}</div>}
+            {/* Error removed from UI, only toast is used */}
             <Button type="submit" className="w-full mt-4">Create Wallet</Button>
           </form>
         </CardContent>

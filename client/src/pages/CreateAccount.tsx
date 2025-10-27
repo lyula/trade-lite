@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 // Read backend URL from .env
 const API_URL = import.meta.env.VITE_BACKEND_URL;
@@ -23,6 +24,7 @@ const CreateAccountPage: React.FC = () => {
     leverage: "1:400",
     platform: "web-based"
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useUserContext();
@@ -43,6 +45,7 @@ const CreateAccountPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
+      setLoading(true);
       try {
         const endpoint = typeParam === "live"
           ? `${API_URL}/api/live-accounts`
@@ -75,6 +78,8 @@ const CreateAccountPage: React.FC = () => {
         }
       } catch (err) {
         alert("Network error: " + err);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -161,7 +166,16 @@ const CreateAccountPage: React.FC = () => {
                 className="w-full border rounded px-3 py-2 text-lg bg-gray-100"
               />
             </div>
-            <Button type="submit" className="w-full mt-4">Create {typeLabels[typeParam]}</Button>
+            <Button type="submit" className="w-full mt-4 flex items-center justify-center" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                  Creating Account...
+                </>
+              ) : (
+                <>Create {typeLabels[typeParam]}</>
+              )}
+            </Button>
           </form>
         </CardContent>
       </Card>

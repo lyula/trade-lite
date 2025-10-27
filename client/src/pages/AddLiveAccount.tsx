@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -14,34 +15,21 @@ const AddLiveAccount = () => {
   const [selectedAccountType, setSelectedAccountType] = useState("standard");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [platform, setPlatform] = useState("web-based");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    // Replace with actual API call
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/live-accounts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // Add required fields here, e.g. userId, accountType, currency, leverage
           accountType: selectedAccountType,
           currency: selectedCurrency,
-          leverage: "1:400", // or get from state if needed
+          leverage: "1:400",
           platform,
-          // userId: ... (get from context if needed)
         }),
       });
-          {/* Platform Selection */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4 text-foreground">Platform</h2>
-            <select
-              value={platform}
-              onChange={e => setPlatform(e.target.value)}
-              className="w-full border rounded px-2 py-2"
-            >
-              <option value="web-based">Web-based</option>
-              <option value="automated">Automated Environment</option>
-            </select>
-          </div>
       const data = await res.json();
       if (data.success) {
         toast({
@@ -63,6 +51,8 @@ const AddLiveAccount = () => {
         description: String(err),
         duration: 4000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,9 +134,17 @@ const AddLiveAccount = () => {
           {/* Submit Button */}
           <Button
             onClick={handleSubmit}
-            className="w-full bg-primary hover:bg-primary/90 text-white py-6"
+            className="w-full bg-primary hover:bg-primary/90 text-white py-6 flex items-center justify-center"
+            disabled={loading}
           >
-            Create Live Account
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                Creating Account...
+              </>
+            ) : (
+              "Create Live Account"
+            )}
           </Button>
         </Card>
       </div>
