@@ -6,7 +6,9 @@ const WalletSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   firstName: { type: String, required: true },
   referralCode: { type: String },
-  balance: { type: Number, default: 0 },
+  balance: { type: Number, default: 0 }, // Main balance in selected currency
+  usdBalance: { type: Number, default: 0 }, // Always store USD equivalent
+  kesBalance: { type: Number, default: 0 }, // Always store KES equivalent
   currency: { type: String, required: true },
   password: { type: String, required: true },
   walletId: { type: String, required: true, unique: true },

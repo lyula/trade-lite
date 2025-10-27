@@ -15,6 +15,10 @@ exports.getAllLiveAccounts = async (req, res) => {
       .populate("userId", "firstName lastName email referralCode")
       .sort({ createdAt: 1 });
 
+    // Get latest conversion rate
+    const latestRateDoc = await require('../models/ConversionRate').findOne().sort({ updatedAt: -1 });
+    const usdToKes = latestRateDoc ? latestRateDoc.rate : 130;
+
     // Slice for requested pages
     const pagedAccounts = allAccounts.slice((startPage - 1) * limit, endPage * limit);
 
@@ -22,11 +26,15 @@ exports.getAllLiveAccounts = async (req, res) => {
     const reversedAccounts = [...pagedAccounts].reverse();
 
     // Numbering: oldest is #1, newest is #total
-    const numberedAccounts = reversedAccounts.map((acc, idx) => ({
-      number: total - ((startPage - 1) * limit + idx),
-      ...acc._doc,
-      user: acc.userId,
-    }));
+    const numberedAccounts = reversedAccounts.map((acc, idx) => {
+      const kesBalance = acc.currency === 'USD' ? acc.balance * usdToKes : acc.balance;
+      return {
+        number: total - ((startPage - 1) * limit + idx),
+        ...acc._doc,
+        user: acc.userId,
+        kesBalance,
+      };
+    });
 
     res.json({ success: true, accounts: numberedAccounts, total, startPage, endPage });
   } catch (err) {
@@ -84,6 +92,19 @@ exports.createLiveAccount = async (req, res) => {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
     const tradingAccountNumber = await generateUniqueTradingAccountNumber();
+    // Get latest conversion rate
+    const latestRateDoc = await require('../models/ConversionRate').findOne().sort({ updatedAt: -1 });
+    const usdToKes = latestRateDoc ? latestRateDoc.rate : 130;
+
+    let balance = 0, usdBalance = 0, kesBalance = 0;
+    if (currency === 'USD') {
+      usdBalance = 0;
+      kesBalance = 0;
+    } else if (currency === 'KES') {
+      kesBalance = 0;
+      usdBalance = 0;
+    }
+
     const liveAccount = new LiveAccount({
       userId,
       firstName: user.firstName,
@@ -93,7 +114,9 @@ exports.createLiveAccount = async (req, res) => {
       platform,
       tradingAccountNumber,
       equity: 0,
-      balance: 0,
+      balance,
+      usdBalance,
+      kesBalance,
       margin: 0,
       credit: 0
     });

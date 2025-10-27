@@ -58,11 +58,12 @@ const LiveAccounts = () => {
     <AdminDashboardLayout>
   <h1 className="text-2xl font-bold mb-4">Live Accounts</h1>
   <div className="mb-4 text-lg font-semibold">Total Balance (All Live Accounts): <span className="text-primary">KES {totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
-      <div className="overflow-x-auto">
-        {loading ? (
-          <div className="py-8 text-center">Loading...</div>
-        ) : (
-          <table className="min-w-full text-sm border">
+      <div className="w-full">
+        <div className="rounded-lg overflow-x-auto border bg-white">
+          {loading ? (
+            <div className="py-8 text-center">Loading...</div>
+          ) : (
+            <table className="min-w-[900px] w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
                 <th className="px-4 py-2 text-left">#</th>
@@ -72,7 +73,9 @@ const LiveAccounts = () => {
                 <th className="px-4 py-2 text-left">Currency</th>
                 <th className="px-4 py-2 text-left">Leverage</th>
                 <th className="px-4 py-2 text-left">Equity</th>
-                <th className="px-4 py-2 text-left">Balance</th>
+                {/* <th className="px-4 py-2 text-left">Balance</th> */}
+                <th className="px-4 py-2 text-left">USD Balance</th>
+                <th className="px-4 py-2 text-left">KES Balance</th>
                 {/* <th className="px-4 py-2 text-left">Margin</th> */}
                 {/* <th className="px-4 py-2 text-left">Credit</th> */}
                 <th className="px-4 py-2 text-left">Platform</th>
@@ -89,7 +92,9 @@ const LiveAccounts = () => {
                   <td className="px-4 py-2 text-left">{acc.currency}</td>
                   <td className="px-4 py-2 text-left">{acc.leverage}</td>
                   <td className="px-4 py-2 text-left">{acc.equity}</td>
-                  <td className="px-4 py-2 text-left">{acc.balance}</td>
+                  {/* <td className="px-4 py-2 text-left">{acc.balance}</td> */}
+                  <td className="px-4 py-2 text-left">{acc.usdBalance !== undefined ? acc.usdBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}</td>
+                  <td className="px-4 py-2 text-left">{acc.kesBalance !== undefined ? acc.kesBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}</td>
                   {/* <td className="px-4 py-2 text-left">{acc.margin}</td> */}
                   {/* <td className="px-4 py-2 text-left">{acc.credit}</td> */}
                   <td className="px-4 py-2 text-left">{acc.platform}</td>
@@ -113,6 +118,7 @@ const LiveAccounts = () => {
           >Next</button>
         </div>
       </div>
+    </div>
     </AdminDashboardLayout>
   );
 };

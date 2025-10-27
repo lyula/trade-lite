@@ -65,18 +65,21 @@ const Wallets = () => {
     <AdminDashboardLayout>
       <h1 className="text-2xl font-bold mb-4">Wallets</h1>
       <div className="mb-4 text-lg font-semibold">Total Balance (All Wallets): <span className="text-primary">KES {totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
-      <div className="overflow-x-auto">
-        {loading ? (
-          <div className="py-8 text-center">Loading...</div>
-        ) : (
-          <table className="min-w-full text-sm border">
+      <div className="w-full">
+        <div className="rounded-lg overflow-x-auto border bg-white">
+          {loading ? (
+            <div className="py-8 text-center">Loading...</div>
+          ) : (
+            <table className="min-w-[900px] w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
                 <th className="px-4 py-2 text-left">#</th>
                 <th className="px-4 py-2 text-left">Wallet ID</th>
                 <th className="px-4 py-2 text-left">User</th>
                 <th className="px-4 py-2 text-left">Currency</th>
-                <th className="px-4 py-2 text-left">Balance</th>
+                {/* <th className="px-4 py-2 text-left">Balance</th> */}
+                <th className="px-4 py-2 text-left">USD Balance</th>
+                <th className="px-4 py-2 text-left">KES Balance</th>
                 <th className="px-4 py-2 text-left">Created</th>
               </tr>
             </thead>
@@ -87,7 +90,9 @@ const Wallets = () => {
                   <td className="px-4 py-2 font-mono font-bold text-left">{w.walletId}</td>
                   <td className="px-4 py-2 text-left">{w.user?.firstName} {w.user?.lastName} <br /><span className="text-xs text-muted-foreground">{w.user?.email}</span></td>
                   <td className="px-4 py-2 text-left">{w.currency}</td>
-                  <td className="px-4 py-2 text-left">{w.balance}</td>
+                  {/* <td className="px-4 py-2 text-left">{w.balance}</td> */}
+                  <td className="px-4 py-2 text-left">{w.usdBalance !== undefined ? w.usdBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}</td>
+                  <td className="px-4 py-2 text-left">{w.kesBalance !== undefined ? w.kesBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}</td>
                   <td className="px-4 py-2 text-left">{new Date(w.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
@@ -108,6 +113,7 @@ const Wallets = () => {
           >Next</button>
         </div>
       </div>
+    </div>
     </AdminDashboardLayout>
   );
 };

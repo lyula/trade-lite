@@ -15,12 +15,20 @@ exports.getAllWallets = async (req, res) => {
 
     const total = await Wallet.countDocuments();
 
+    // Get latest conversion rate
+    const latestRateDoc = await require('../models/ConversionRate').findOne().sort({ updatedAt: -1 });
+    const usdToKes = latestRateDoc ? latestRateDoc.rate : 130;
+
     // Numbering: oldest is #1, newest is #total
-    const numberedWallets = wallets.map((wallet, idx) => ({
-      number: (page - 1) * limit + idx + 1,
-      ...wallet._doc,
-      user: wallet.userId,
-    }));
+    const numberedWallets = wallets.map((wallet, idx) => {
+      const kesBalance = wallet.currency === 'USD' ? wallet.balance * usdToKes : wallet.balance;
+      return {
+        number: (page - 1) * limit + idx + 1,
+        ...wallet._doc,
+        user: wallet.userId,
+        kesBalance,
+      };
+    });
 
     res.json({ success: true, wallets: numberedWallets, total });
   } catch (err) {
@@ -82,11 +90,27 @@ exports.createWallet = async (req, res) => {
       suffix++;
     }
     walletId = candidateId;
+
+    // Get latest conversion rate
+    const latestRateDoc = await require('../models/ConversionRate').findOne().sort({ updatedAt: -1 });
+    const usdToKes = latestRateDoc ? latestRateDoc.rate : 130;
+
+    let balance = 0, usdBalance = 0, kesBalance = 0;
+    if (currency === 'USD') {
+      usdBalance = 0;
+      kesBalance = 0;
+    } else if (currency === 'KES') {
+      kesBalance = 0;
+      usdBalance = 0;
+    }
+
     const wallet = new Wallet({
       userId,
       firstName: user.firstName,
       referralCode: user.referralCode || '',
-      balance: 0,
+      balance,
+      usdBalance,
+      kesBalance,
       currency,
       password,
       walletId

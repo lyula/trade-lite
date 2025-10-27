@@ -12,7 +12,9 @@ const LiveAccountSchema = new mongoose.Schema({
   platform: { type: String, enum: ['web-based', 'automated'], required: true },
   tradingAccountNumber: { type: String, required: true, unique: true },
   equity: { type: Number, default: 0 },
-  balance: { type: Number, default: 0 },
+  balance: { type: Number, default: 0 }, // Main balance in selected currency
+  usdBalance: { type: Number, default: 0 }, // Always store USD equivalent
+  kesBalance: { type: Number, default: 0 }, // Always store KES equivalent
   margin: { type: Number, default: 0 },
   credit: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
