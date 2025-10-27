@@ -1,3 +1,11 @@
+// Helper to get currency from selected account/wallet
+function getSelectedCurrency(selectedId, liveAccounts, wallets) {
+  const acc = liveAccounts.find(a => a.tradingAccountNumber === selectedId);
+  if (acc) return acc.currency;
+  const wallet = wallets.find(w => w.walletId === selectedId);
+  if (wallet) return wallet.currency;
+  return null;
+}
 import React, { useState, useEffect } from 'react';
 import { useUserContext } from '@/context/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -38,10 +46,14 @@ const TransferFunds: React.FC = () => {
     fetchAccounts();
   }, [user]);
 
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Transfer Funds</h1>
 
+      <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
+        Note: You can only transfer funds between wallets or accounts of the same currency.
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Move Funds Between Accounts</CardTitle>
@@ -56,16 +68,33 @@ const TransferFunds: React.FC = () => {
                 className="w-full border rounded px-3 py-2 text-lg"
               >
                 <option value="">Select From Account</option>
-                {liveAccounts.map(acc => (
-                  <option key={acc._id} value={acc.tradingAccountNumber}>
-                    {`Live: ${acc.tradingAccountNumber} (${acc.currency})`}
-                  </option>
-                ))}
-                {wallets.map(wallet => (
-                  <option key={wallet._id} value={wallet.walletId}>
-                    {`Wallet: ${wallet.walletId} (${wallet.currency})`}
-                  </option>
-                ))}
+                {(fromAccount === '' ?
+                  [
+                    ...liveAccounts.map(acc => (
+                      <option key={acc._id} value={acc.tradingAccountNumber}>
+                        {`Live: ${acc.tradingAccountNumber} (${acc.currency}) - Balance: ${acc.balance}`}
+                      </option>
+                    )),
+                    ...wallets.map(wallet => (
+                      <option key={wallet._id} value={wallet.walletId}>
+                        {`Wallet: ${wallet.walletId} (${wallet.currency}) - Balance: ${wallet.balance}`}
+                      </option>
+                    ))
+                  ]
+                  :
+                  [
+                    ...liveAccounts.filter(acc => acc.currency === getSelectedCurrency(fromAccount, liveAccounts, wallets)).map(acc => (
+                      <option key={acc._id} value={acc.tradingAccountNumber}>
+                        {`Live: ${acc.tradingAccountNumber} (${acc.currency}) - Balance: ${acc.balance}`}
+                      </option>
+                    )),
+                    ...wallets.filter(wallet => wallet.currency === getSelectedCurrency(fromAccount, liveAccounts, wallets)).map(wallet => (
+                      <option key={wallet._id} value={wallet.walletId}>
+                        {`Wallet: ${wallet.walletId} (${wallet.currency}) - Balance: ${wallet.balance}`}
+                      </option>
+                    ))
+                  ]
+                )}
               </select>
             </div>
 
@@ -77,20 +106,33 @@ const TransferFunds: React.FC = () => {
                 className="w-full border rounded px-3 py-2 text-lg"
               >
                 <option value="">Select To Account</option>
-                {liveAccounts
-                  .filter(acc => acc.tradingAccountNumber !== fromAccount)
-                  .map(acc => (
-                    <option key={acc._id} value={acc.tradingAccountNumber}>
-                      {`Live: ${acc.tradingAccountNumber} (${acc.currency})`}
-                    </option>
-                  ))}
-                {wallets
-                  .filter(wallet => wallet.walletId !== fromAccount)
-                  .map(wallet => (
-                    <option key={wallet._id} value={wallet.walletId}>
-                      {`Wallet: ${wallet.walletId} (${wallet.currency})`}
-                    </option>
-                  ))}
+                {(fromAccount === '' ?
+                  [
+                    ...liveAccounts.map(acc => (
+                      <option key={acc._id} value={acc.tradingAccountNumber}>
+                        {`Live: ${acc.tradingAccountNumber} (${acc.currency}) - Balance: ${acc.balance}`}
+                      </option>
+                    )),
+                    ...wallets.map(wallet => (
+                      <option key={wallet._id} value={wallet.walletId}>
+                        {`Wallet: ${wallet.walletId} (${wallet.currency}) - Balance: ${wallet.balance}`}
+                      </option>
+                    ))
+                  ]
+                  :
+                  [
+                    ...liveAccounts.filter(acc => acc.tradingAccountNumber !== fromAccount && acc.currency === getSelectedCurrency(fromAccount, liveAccounts, wallets)).map(acc => (
+                      <option key={acc._id} value={acc.tradingAccountNumber}>
+                        {`Live: ${acc.tradingAccountNumber} (${acc.currency}) - Balance: ${acc.balance}`}
+                      </option>
+                    )),
+                    ...wallets.filter(wallet => wallet.walletId !== fromAccount && wallet.currency === getSelectedCurrency(fromAccount, liveAccounts, wallets)).map(wallet => (
+                      <option key={wallet._id} value={wallet.walletId}>
+                        {`Wallet: ${wallet.walletId} (${wallet.currency}) - Balance: ${wallet.balance}`}
+                      </option>
+                    ))
+                  ]
+                )}
               </select>
             </div>
 

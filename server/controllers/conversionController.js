@@ -18,8 +18,9 @@ exports.getLatestRate = async (req, res) => {
 // Update conversion rate from API
 exports.updateRate = async () => {
   try {
-    const response = await axios.get('https://api.exchangerate.host/latest?base=USD&symbols=KES');
-    const rate = response.data.rates.KES;
+    // Use floatrates.com, no API key required
+    const response = await axios.get('https://www.floatrates.com/daily/usd.json');
+    const rate = response.data.kes.rate;
     await ConversionRate.create({ rate, updatedAt: new Date() });
     console.log(`Updated KES/USD rate: ${rate}`);
   } catch (err) {
