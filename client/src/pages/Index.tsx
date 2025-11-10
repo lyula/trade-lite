@@ -33,16 +33,17 @@ const Index = () => {
         body: JSON.stringify(form),
       });
       if (res.ok) {
-        setFeedback("Thank you for contacting us! We'll get back to you soon.");
+        const data = await res.json();
+        setFeedback(data.message || "Thank you for contacting us! We'll get back to you soon.");
         setForm({ name: "", email: "", message: "" });
-        setTimeout(() => setFeedback("") , 3000);
+        setTimeout(() => setFeedback("") , 8000);
       } else {
         setFeedback("Failed to send message. Please try again later.");
-        setTimeout(() => setFeedback("") , 3000);
+        setTimeout(() => setFeedback("") , 8000);
       }
     } catch {
       setFeedback("Failed to send message. Please try again later.");
-      setTimeout(() => setFeedback("") , 3000);
+      setTimeout(() => setFeedback("") , 8000);
     }
     setLoading(false);
   };
@@ -78,7 +79,7 @@ const Index = () => {
             </button>
             {feedback && (
               <p
-                className={`text-center text-sm mt-2 ${
+                className={`text-center text-sm mt-2 whitespace-pre-line ${
                   feedback.startsWith('Thank you')
                     ? 'text-green-600 dark:text-green-400'
                     : 'text-red-600 dark:text-red-400'
