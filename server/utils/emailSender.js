@@ -13,7 +13,7 @@ async function sendAccountEmail({ to, subject, accountDetails, type }) {
     html = `
       <div style="font-family: Arial, sans-serif; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin: auto; padding: 0;">
         <div style="background: #fff; border-radius: 8px; padding: 32px 16px 24px 16px; text-align: center;">
-          <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto;" />
+          <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" width="80" height="80" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto; border: 0;" />
           <h2 style="color: #007bff; margin-bottom: 16px; font-size: 1.5em;">Your Registration OTP</h2>
           <p style="font-size: 18px; color: #222; font-weight: bold; margin-bottom: 24px; letter-spacing: 2px;">${accountDetails}</p>
           <p style="font-size: 15px; color: #555; margin-bottom: 32px; text-align: left;">
@@ -33,7 +33,7 @@ async function sendAccountEmail({ to, subject, accountDetails, type }) {
     html = `
       <div style="font-family: Arial, sans-serif; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin: auto; padding: 0;">
         <div style="background: #fff; border-radius: 8px; padding: 32px 16px 24px 16px; text-align: center;">
-          <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto;" />
+          <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" width="80" height="80" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto; border: 0;" />
           <h2 style="color: #007bff; margin-bottom: 16px; font-size: 1.5em;">Congratulations!</h2>
           <p style="font-size: 16px; color: #333; margin-bottom: 18px;">
             Your ${type === 'Live Trading' ? 'live trading account' : 'wallet account'} was created successfully.
