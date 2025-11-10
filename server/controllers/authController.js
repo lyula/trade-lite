@@ -82,7 +82,7 @@ exports.register = async (req, res) => {
       });
       console.log('Welcome email sent successfully to:', email);
     } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError.message);
+      console.error('Failed to send welcome email:', emailError.response?.data || emailError.message);
       // Don't fail registration if email fails
     }
 
