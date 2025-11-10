@@ -9,6 +9,17 @@ exports.sendOtp = async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required.' });
 
+  // Rate limit: max 5 OTPs per 10 minutes per IP
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const OtpRequest = require('../models/OtpRequest');
+  const now = Date.now();
+  const tenMinsAgo = now - 10 * 60 * 1000;
+  const recentRequests = await OtpRequest.countDocuments({ ip, createdAt: { $gte: tenMinsAgo } });
+  if (recentRequests >= 5) {
+    return res.status(429).json({ error: 'Too many OTP requests from this device. Please wait 10 minutes.' });
+  }
+  await OtpRequest.create({ ip, createdAt: now });
+
   // Check if email already exists in User collection
   const User = require('../models/User');
   const existingUser = await User.findOne({ email });
@@ -17,42 +28,25 @@ exports.sendOtp = async (req, res) => {
   }
 
   const code = generateOtp();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  const expiresAt = new Date(now + 10 * 60 * 1000); // 10 minutes
 
   await Otp.deleteMany({ email }); // Remove previous OTPs for this email
   await Otp.create({ email, code, expiresAt });
 
-  // Send OTP email
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: `Equity Vault <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: 'Your EquityVault Registration OTP',
-    html: `
-      <div style="font-family: Arial, sans-serif; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin: auto; padding: 0;">
-        <div style="background: #fff; border-radius: 8px; padding: 32px 16px 24px 16px; text-align: center;">
-          <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto;" />
-          <h2 style="color: #007bff; margin-bottom: 16px; font-size: 1.5em;">Your Registration OTP</h2>
-          <p style="font-size: 18px; color: #222; font-weight: bold; margin-bottom: 24px;">${code}</p>
-          <p style="font-size: 15px; color: #555; margin-bottom: 32px; text-align: left;">
-            Please enter this code to verify your email address.<br/>
-            This OTP will expire in 10 minutes.
-          </p>
-        </div>
-        <footer style="background: #fff; border-top: 1px solid #eee; padding: 18px 0 0 0; text-align: center; border-radius: 0 0 8px 8px; font-size: 13px; color: #888; margin-top: 0;">
-          EquityVault Securities &copy; ${new Date().getFullYear()}
-        </footer>
-      </div>
-    `,
-  });
+  // Send OTP email using SMTP Express
+  try {
+    const { sendAccountEmail } = require('../utils/emailSender');
+    await sendAccountEmail({
+      to: email,
+      subject: 'Your EquityVault Registration OTP',
+      accountDetails: code,
+      type: 'OTP',
+    });
+    console.log('OTP email sent successfully to:', email);
+  } catch (error) {
+    console.error('Failed to send OTP email:', error.message);
+    return res.status(500).json({ error: 'Failed to send OTP email. Please try again.' });
+  }
 
   res.json({ success: true });
 };

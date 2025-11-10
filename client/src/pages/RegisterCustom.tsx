@@ -65,7 +65,7 @@ const RegisterCustom = () => {
       try {
         await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/otp/send`, { email });
         setOtpSent(true);
-        setCustomSuccess("OTP sent to your email. Please enter it below.");
+        setCustomSuccess("OTP sent to your email.\nPlease check your inbox or spam/junk folder.");
       } catch (error) {
         setCustomError(error.response?.data?.error || "Failed to send OTP.");
       }
@@ -138,11 +138,11 @@ const RegisterCustom = () => {
     type: "success" | "error";
   }) => (
     <div
-      className={`fixed bottom-4 right-4 px-4 py-2 rounded shadow-md text-white ${
+      className={`fixed bottom-4 right-4 px-4 py-3 rounded shadow-md text-white max-w-md ${
         type === "success" ? "bg-green-500" : "bg-red-500"
       }`}
     >
-      {message}
+      <div style={{ whiteSpace: 'pre-line' }}>{message}</div>
     </div>
   );
 
@@ -151,7 +151,7 @@ const RegisterCustom = () => {
       const timer = setTimeout(() => {
         setCustomError("");
         setCustomSuccess("");
-      }, 3000);
+      }, 8000);
       return () => clearTimeout(timer);
     }
   }, [customError, customSuccess]);
@@ -330,6 +330,24 @@ const RegisterCustom = () => {
               {otpError && (
                 <div className="text-red-500 text-sm mt-1">{otpError}</div>
               )}
+              <button
+                type="button"
+                className="mt-2 text-teal-500 hover:underline text-sm"
+                onClick={async () => {
+                  setLoading(true);
+                  setCustomError("");
+                  try {
+                    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/otp/send`, { email });
+                    setCustomSuccess("OTP resent to your email.\nPlease check your inbox or spam/junk folder.");
+                  } catch (error) {
+                    setCustomError(error.response?.data?.error || "Failed to resend OTP.");
+                  }
+                  setLoading(false);
+                }}
+                disabled={loading}
+              >
+                Resend OTP
+              </button>
             </div>
           )}
           <Button
