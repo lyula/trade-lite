@@ -318,7 +318,7 @@ const RegisterCustom = () => {
 
           {otpSent && (
             <div>
-              <label className="block text-sm font-medium mb-2">Enter OTP</label>
+              <label className="block text-sm font-medium mb-2 text-center w-full">Enter OTP</label>
               <div className="flex gap-2 mb-2 justify-center">
                 {[0,1,2,3,4,5].map((i) => (
                   <input
