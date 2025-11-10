@@ -318,15 +318,32 @@ const RegisterCustom = () => {
 
           {otpSent && (
             <div>
-              <label className="block text-sm font-medium">Enter OTP</label>
-              <Input
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter the OTP sent to your email"
-                required
-                className="w-full border rounded px-3 py-2"
-              />
+              <label className="block text-sm font-medium mb-2">Enter OTP</label>
+              <div className="flex gap-2 mb-2">
+                {[0,1,2,3,4,5].map((i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={otp[i] || ""}
+                    onChange={e => {
+                      const val = e.target.value.replace(/[^0-9]/g, "");
+                      if (val.length > 1) return;
+                      const newOtp = otp.split("");
+                      newOtp[i] = val;
+                      setOtp(newOtp.join(""));
+                      // Auto-focus next box
+                      if (val && i < 5) {
+                        const next = document.getElementById(`otp-box-${i+1}`);
+                        if (next) next.focus();
+                      }
+                    }}
+                    id={`otp-box-${i}`}
+                    className="w-10 h-12 text-center text-xl border rounded focus:ring-2 focus:ring-teal-500"
+                  />
+                ))}
+              </div>
               {otpError && (
                 <div className="text-red-500 text-sm mt-1">{otpError}</div>
               )}
