@@ -38,47 +38,14 @@ exports.register = async (req, res) => {
     const user = new User({ firstName, lastName, gender, email, city, phone, password, referralCode, referredBy });
     await user.save();
 
-    // Send welcome email using SMTP Express API
+    // Send welcome email using shared email sender
     try {
-      const axios = require('axios');
-      const SMTP_EXPRESS_API_URL = 'https://api.smtpexpress.com/send';
-      const SMTP_EXPRESS_SECRET = process.env.SMTP_EXPRESS_SECRET;
-      const SMTP_EXPRESS_SENDER = 'equityvault-770bbf@ensend.me';
-
-      const payload = {
+      const { sendAccountEmail } = require('../utils/emailSender');
+      await sendAccountEmail({
+        to: email,
         subject: 'Welcome to EquityVault Securities!',
-        message: `
-          <div style="font-family: Arial, sans-serif; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin: auto; padding: 0;">
-            <div style="background: #fff; border-radius: 8px; padding: 32px 16px 24px 16px; text-align: center;">
-              <img src="https://equityvaultsecurities.vercel.app/lite-logo.jpg" alt="EquityVault Logo" width="80" height="80" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display: block; margin-left: auto; margin-right: auto; border: 0;" />
-              <h2 style="color: #007bff; margin-bottom: 16px; font-size: 1.5em;">Welcome, ${firstName}!</h2>
-              <p style="font-size: 16px; color: #333; margin-bottom: 24px; text-align: left;">
-                Thank you for registering with <strong>EquityVault Securities</strong>.<br/>
-                Your account has been created successfully.<br/>
-                You can now log in and start using our platform.
-              </p>
-              <p style="font-size: 15px; color: #555; margin-bottom: 32px; text-align: left;">
-                Best regards,<br/>
-                <strong>EquityVault Securities Team</strong>
-              </p>
-            </div>
-            <footer style="background: #fff; border-top: 1px solid #eee; padding: 18px 0 0 0; text-align: center; border-radius: 0 0 8px 8px; font-size: 13px; color: #888; margin-top: 0;">
-              EquityVault Securities &copy; ${new Date().getFullYear()}
-            </footer>
-          </div>
-        `,
-        sender: {
-          name: 'Equity Vault',
-          email: SMTP_EXPRESS_SENDER,
-        },
-        recipients: { email },
-      };
-
-      await axios.post(SMTP_EXPRESS_API_URL, payload, {
-        headers: {
-          'Authorization': `Bearer ${SMTP_EXPRESS_SECRET}`,
-          'Content-Type': 'application/json',
-        },
+        accountDetails: `Welcome, ${firstName}!\n\nThank you for registering with EquityVault Securities.\nYour account has been created successfully.\nYou can now log in and start using our platform.`,
+        type: 'Welcome',
       });
       console.log('Welcome email sent successfully to:', email);
     } catch (emailError) {
