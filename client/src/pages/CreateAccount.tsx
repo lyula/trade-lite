@@ -22,7 +22,7 @@ const CreateAccountPage: React.FC = () => {
     accountType: "standard",
     currency: typeParam === "demo" ? "USD" : "USD",
     leverage: "1:400",
-    platform: "web-based"
+    platform: typeParam === "live" ? "automated" : "web-based"
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -71,6 +71,7 @@ const CreateAccountPage: React.FC = () => {
             duration: 2000,
           });
           setTimeout(() => {
+            window.dispatchEvent(new Event("dashboard-refresh"));
             navigate("/dashboard");
           }, 2000);
         } else {

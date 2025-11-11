@@ -39,9 +39,6 @@ import Profile from "./pages/Profile"; // Import the Profile component
 import WithdrawFromAccount from "./pages/WithdrawFromAccount";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import { UserProvider } from "@/context/UserContext";
-
-import AddLiveAccount from "./pages/AddLiveAccount";
-import AddDemoAccount from "./pages/AddDemoAccount";
 import AddWalletAccount from "./pages/AddWalletAccount";
 import DepositToAccount from "./pages/DepositToAccount";
 import LegalTerms from "./pages/LegalTerms";
@@ -98,8 +95,6 @@ const App = () => (
               <Route path="platforms" element={<Platforms />} />
               <Route path="refer" element={<Refer />} />
               <Route path="profile" element={<Profile />} /> {/* Add the Profile route */}
-              <Route path="add-live-account" element={<AddLiveAccount />} />
-              <Route path="add-demo-account" element={<AddDemoAccount />} />
               <Route path="add-wallet-account" element={<AddWalletAccount />} />
               <Route path="deposit-to-account" element={<DepositToAccount />} />
               <Route path="legal" element={<LegalTerms />} />

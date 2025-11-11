@@ -32,7 +32,7 @@ const Dashboard = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    async function fetchAndCacheData(forceRefresh = false) {
+    async function fetchData() {
       if (!user || !user.id) {
         setLiveAccounts([]);
         setDemoAccounts([]);
@@ -41,57 +41,32 @@ const Dashboard = () => {
         setLoading(false);
         return;
       }
-      // Try to load from cache unless forceRefresh
-      if (!forceRefresh) {
-        const cached = localStorage.getItem(`dashboard-data-${user.id}`);
-        if (cached) {
-          const { liveAccounts, demoAccounts, wallets, recentActivity } = JSON.parse(cached);
-          setLiveAccounts(liveAccounts || []);
-          setDemoAccounts(demoAccounts || []);
-          setWallets(wallets || []);
-          setRecentActivity(recentActivity || { deposits: [], withdrawals: [] });
-          setLoading(false);
-          return;
-        }
-      }
-      // Fetch fresh data
-      let liveAccounts = [], demoAccounts = [], wallets = [], recentActivity = { deposits: [], withdrawals: [] };
       try {
         const res = await fetch(`${API_URL}/api/live-accounts?userId=${user.id}`);
         const data = await res.json();
-        liveAccounts = data.success && Array.isArray(data.accounts) ? data.accounts : [];
-        setLiveAccounts(liveAccounts);
+        setLiveAccounts(data.success && Array.isArray(data.accounts) ? data.accounts : []);
       } catch { setLiveAccounts([]); }
       try {
         const res = await fetch(`${API_URL}/api/demo-accounts?userId=${user.id}`);
         const data = await res.json();
-        demoAccounts = data.success && Array.isArray(data.accounts) ? data.accounts : [];
-        setDemoAccounts(demoAccounts);
+        setDemoAccounts(data.success && Array.isArray(data.accounts) ? data.accounts : []);
       } catch { setDemoAccounts([]); }
       try {
         const res = await fetch(`${API_URL}/api/wallets?userId=${user.id}`);
         const data = await res.json();
-        wallets = data.success && Array.isArray(data.wallets) ? data.wallets : [];
-        setWallets(wallets);
+        setWallets(data.success && Array.isArray(data.wallets) ? data.wallets : []);
       } catch { setWallets([]); }
       try {
         const res = await fetch(`${API_URL}/api/activity/recent?userId=${user.id}`);
         const data = await res.json();
-        recentActivity = data.success ? { deposits: data.deposits || [], withdrawals: data.withdrawals || [] } : { deposits: [], withdrawals: [] };
-        setRecentActivity(recentActivity);
+        setRecentActivity(data.success ? { deposits: data.deposits || [], withdrawals: data.withdrawals || [] } : { deposits: [], withdrawals: [] });
       } catch { setRecentActivity({ deposits: [], withdrawals: [] }); }
       setLoading(false);
-      // Cache the data
-      localStorage.setItem(`dashboard-data-${user.id}`, JSON.stringify({ liveAccounts, demoAccounts, wallets, recentActivity }));
     }
-
-    // Detect login (no cache) or force refresh
-    fetchAndCacheData();
-
-    // Listen for custom events to force refresh
-    window.addEventListener("dashboard-refresh", () => fetchAndCacheData(true));
+    fetchData();
+    window.addEventListener("dashboard-refresh", fetchData);
     return () => {
-      window.removeEventListener("dashboard-refresh", () => fetchAndCacheData(true));
+      window.removeEventListener("dashboard-refresh", fetchData);
     };
   }, [user]);
 

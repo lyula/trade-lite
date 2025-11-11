@@ -23,6 +23,8 @@ const CreateWalletPage: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
@@ -41,6 +43,7 @@ const CreateWalletPage: React.FC = () => {
       });
       return;
     }
+    setLoading(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/wallets/create`, {
         method: "POST",
@@ -59,26 +62,24 @@ const CreateWalletPage: React.FC = () => {
           duration: 2000,
         });
         setTimeout(() => {
+          window.dispatchEvent(new Event("dashboard-refresh"));
           navigate("/dashboard");
         }, 2000);
       } else {
-        let errorMsg = data.error || "Failed to create wallet";
-        if (errorMsg.includes("already have a wallet") || errorMsg.includes("Only USD and KES wallets are allowed")) {
-          errorMsg = "You are only entitled to two wallets, one in KES and another in USD.";
-        }
         toast({
           title: "Wallet creation failed",
-          description: errorMsg,
+          description: data.error || "Unknown error",
           duration: 4000,
         });
-  // Do not set error state, only show toast
       }
     } catch (err) {
       toast({
-        title: "Wallet creation failed",
-        description: "Network error. Please try again.",
+        title: "Network error",
+        description: String(err),
         duration: 4000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,6 +92,7 @@ const CreateWalletPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Currency select */}
             <div>
               <label className="block text-sm font-medium">Currency</label>
               <select
@@ -98,13 +100,16 @@ const CreateWalletPage: React.FC = () => {
                 value={form.currency}
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2 text-lg"
+                required
               >
                 <option value="USD">USD</option>
-                <option value="KES">KES</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
               </select>
             </div>
+            {/* Password field */}
             <div>
-              <label className="block text-sm font-medium">Wallet Password</label>
+              <label className="block text-sm font-medium">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -124,6 +129,7 @@ const CreateWalletPage: React.FC = () => {
                 </button>
               </div>
             </div>
+            {/* Confirm Password field */}
             <div>
               <label className="block text-sm font-medium">Confirm Password</label>
               <div className="relative">
@@ -146,7 +152,19 @@ const CreateWalletPage: React.FC = () => {
               </div>
             </div>
             {/* Error removed from UI, only toast is used */}
-            <Button type="submit" className="w-full mt-4">Create Wallet</Button>
+            <Button type="submit" className="w-full mt-4" disabled={loading}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Creating Wallet
+                </span>
+              ) : (
+                "Create Wallet"
+              )}
+            </Button>
           </form>
         </CardContent>
       </Card>
