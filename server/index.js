@@ -71,6 +71,10 @@ app.use('/api/conversion', conversionRoutes);
 const contactRoutes = require('./routes/contact');
 app.use('/api/contact', contactRoutes);
 
+// Password reset routes
+const passwordRoutes = require('./routes/password');
+app.use('/api/password', passwordRoutes);
+
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     cors(corsOptions)(req, res, next);
