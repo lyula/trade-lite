@@ -14,6 +14,9 @@ const DepositToAccount = () => {
   const [currency, setCurrency] = useState("USD");
   const [phone, setPhone] = useState("");
   const [wallets, setWallets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const { user } = useUserContext();
   useEffect(() => {
     async function fetchWallets() {
@@ -41,14 +44,79 @@ const DepositToAccount = () => {
     setCustomAmount("");
   };
 
-  const handleContinue = () => {
-    // Handle deposit logic here
-    navigate("/dashboard/deposits");
+  const handleContinue = async () => {
+    setError('');
+    setSuccess('');
+
+    if (!selectedAccount) {
+      setError('Please select a wallet account');
+      return;
+    }
+
+    const amount = customAmount ? parseFloat(customAmount) : depositAmount;
+    if (!amount || amount <= 0) {
+      setError('Please enter a valid amount');
+      return;
+    }
+
+    if (!phone || phone.length !== 9) {
+      setError('Please enter a valid phone number');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/transfer/external-deposit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          walletId: selectedAccount,
+          amount,
+          currency,
+          phone: `+254${phone}`
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess(data.message || 'Deposit initiated successfully!');
+        setSelectedAccount('');
+        setCustomAmount('');
+        setDepositAmount(50000);
+        setPhone('');
+
+        setTimeout(() => {
+          navigate("/dashboard/deposits");
+        }, 2000);
+      } else {
+        setError(data.error || 'Deposit failed');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="space-y-6 p-6">
       <h1 className="text-3xl font-bold">Deposit to Account</h1>
+
+      {error && (
+        <div className="p-3 bg-red-50 border-l-4 border-red-400 text-red-800 rounded">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="p-3 bg-green-50 border-l-4 border-green-400 text-green-800 rounded">
+          {success}
+        </div>
+      )}
 
       <Card className="w-full">
         <CardHeader>
@@ -136,8 +204,8 @@ const DepositToAccount = () => {
               </div>
             </div>
 
-            <Button type="button" className="bg-teal-500 hover:bg-teal-600 text-lg py-2 rounded w-full mt-4" onClick={handleContinue}>
-              Initiate Deposit
+            <Button type="button" className="bg-teal-500 hover:bg-teal-600 text-lg py-2 rounded w-full mt-4" onClick={handleContinue} disabled={loading}>
+              {loading ? 'Processing...' : 'Initiate Deposit'}
             </Button>
             <span className="block text-sm text-muted-foreground text-center mt-4">
               EquityVault does not accept payments from numbers or cards not registered under your name. I confirm that my account name with EquityVault matches the name on my card or mobile number.

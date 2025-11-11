@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TrendingUp, TrendingDown, AlertTriangle, AlertCircle } from "lucide-react";
+import { TrendingUp, TrendingDown, Bot } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -15,6 +15,7 @@ interface TradeControlsProps {
   selectedPair: string;
   onTrade: (type: "buy" | "sell", amount: number) => void;
   accountType?: "demo" | "live";
+  isConnected?: boolean;
 }
 
 export const TradeControls = ({ currentPrice, selectedPair, onTrade, accountType = "demo" }: TradeControlsProps) => {
@@ -65,7 +66,8 @@ export const TradeControls = ({ currentPrice, selectedPair, onTrade, accountType
           <Button
             onClick={() => handleTrade("buy")}
             className="bg-green-600 hover:bg-green-700 text-white"
-            disabled={!amount || parseFloat(amount) <= 0}
+            disabled={true}
+            title="Automated trading handles all trades"
           >
             <TrendingUp className="mr-2 h-4 w-4" />
             Buy
@@ -73,17 +75,19 @@ export const TradeControls = ({ currentPrice, selectedPair, onTrade, accountType
           <Button
             onClick={() => handleTrade("sell")}
             className="bg-red-600 hover:bg-red-700 text-white"
-            disabled={!amount || parseFloat(amount) <= 0}
+            disabled={true}
+            title="Automated trading handles all trades"
           >
             <TrendingDown className="mr-2 h-4 w-4" />
             Sell
           </Button>
         </div>
-          <Alert className="mt-4 border border-muted bg-muted text-muted-foreground">
-            <AlertDescription className="text-xs">
-              Trading involves risk. Please review our risk disclosure before proceeding.
-            </AlertDescription>
-          </Alert>
+
+        <Alert className="mt-4 border border-muted bg-muted text-muted-foreground">
+          <AlertDescription className="text-xs">
+            Trading involves risk. Please review our risk disclosure before proceeding.
+          </AlertDescription>
+        </Alert>
       </div>
     </Card>
   );
