@@ -3,15 +3,21 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, AlertTriangle, AlertCircle } from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 
 interface TradeControlsProps {
   currentPrice: number;
   selectedPair: string;
   onTrade: (type: "buy" | "sell", amount: number) => void;
+  accountType?: "demo" | "live";
 }
 
-export const TradeControls = ({ currentPrice, selectedPair, onTrade }: TradeControlsProps) => {
+export const TradeControls = ({ currentPrice, selectedPair, onTrade, accountType = "demo" }: TradeControlsProps) => {
   const [amount, setAmount] = useState("100");
 
   const handleTrade = (type: "buy" | "sell") => {
@@ -30,6 +36,7 @@ export const TradeControls = ({ currentPrice, selectedPair, onTrade }: TradeCont
       </div>
 
       <div className="space-y-4">
+
         <div>
           <Label className="text-sm text-muted-foreground">Current Price</Label>
           <div className="text-2xl font-bold text-foreground">
@@ -72,11 +79,11 @@ export const TradeControls = ({ currentPrice, selectedPair, onTrade }: TradeCont
             Sell
           </Button>
         </div>
-
-        <div className="text-xs text-muted-foreground mt-4 p-2 bg-muted rounded">
-          <p className="font-semibold mb-1">Simulated Trading</p>
-          <p>This is a simulated environment for testing trading strategies. No real money is involved.</p>
-        </div>
+          <Alert className="mt-4 border border-muted bg-muted text-muted-foreground">
+            <AlertDescription className="text-xs">
+              Trading involves risk. Please review our risk disclosure before proceeding.
+            </AlertDescription>
+          </Alert>
       </div>
     </Card>
   );

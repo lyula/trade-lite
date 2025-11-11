@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserContext } from "@/context/UserContext";
-import { Link2, Wallet, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
+import { Link2, Wallet, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,10 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 
 interface MarketSelectorProps {
   selectedPair: string;
   onSelectPair: (pair: string) => void;
+  onAccountTypeChange?: (type: "demo" | "live") => void;
 }
 
 interface Account {
@@ -27,7 +33,7 @@ interface Account {
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorProps) => {
+export const MarketSelector = ({ selectedPair, onSelectPair, onAccountTypeChange }: MarketSelectorProps) => {
   const { user } = useUserContext();
   const [liveAccounts, setLiveAccounts] = useState<Account[]>([]);
   const [demoAccounts, setDemoAccounts] = useState<Account[]>([]);
@@ -35,6 +41,7 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
   const [accountType, setAccountType] = useState<"demo" | "live">("demo");
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     async function fetchAccounts() {
@@ -62,14 +69,43 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
   }, [user]);
 
   const handleConnect = () => {
-    if (selectedAccount) {
-      setIsConnected(true);
+    setError("");
+    
+    if (!selectedAccount) {
+      setError("Please select an account to connect");
+      return;
+    }
+
+    const accountDetails = currentAccounts.find(
+      (acc) => acc.tradingAccountNumber === selectedAccount
+    );
+
+    if (!accountDetails) {
+      setError("Selected account not found");
+      return;
+    }
+
+    // Check if balance is $0
+    if (accountDetails.balance <= 0) {
+      setError(
+        `Insufficient balance. Your ${accountType === "demo" ? "demo" : "live"} account has ${accountDetails.currency} 0.00. Please fund your account before connecting to the market.`
+      );
+      return;
+    }
+
+    setIsConnected(true);
+    if (onAccountTypeChange) {
+      onAccountTypeChange(accountType);
     }
   };
 
   const handleDisconnect = () => {
     setIsConnected(false);
     setSelectedAccount("");
+    setError("");
+    if (onAccountTypeChange) {
+      onAccountTypeChange("demo");
+    }
   };
 
   const currentAccounts = accountType === "demo" ? demoAccounts : liveAccounts;
@@ -85,7 +121,7 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
           Connect Account to Market
         </h2>
         <p className="text-sm text-muted-foreground">
-          Select and connect your trading account to start automated trading
+          Connect your trading account to automated crypto market trading
         </p>
       </div>
 
@@ -145,6 +181,9 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
                   onClick={() => {
                     setAccountType("demo");
                     setSelectedAccount("");
+                    if (onAccountTypeChange) {
+                      onAccountTypeChange("demo");
+                    }
                   }}
                   className="flex items-center gap-2"
                 >
@@ -156,6 +195,9 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
                   onClick={() => {
                     setAccountType("live");
                     setSelectedAccount("");
+                    if (onAccountTypeChange) {
+                      onAccountTypeChange("live");
+                    }
                   }}
                   className="flex items-center gap-2"
                 >
@@ -170,7 +212,10 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
                     <label className="text-sm font-medium text-foreground mb-2 block">
                       Select {accountType === "demo" ? "Demo" : "Live"} Account
                     </label>
-                    <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+                    <Select value={selectedAccount} onValueChange={(value) => {
+                      setSelectedAccount(value);
+                      setError("");
+                    }}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Choose an account" />
                       </SelectTrigger>
@@ -186,6 +231,13 @@ export const MarketSelector = ({ selectedPair, onSelectPair }: MarketSelectorPro
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {error && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-sm">{error}</AlertDescription>
+                    </Alert>
+                  )}
 
                   <Button
                     onClick={handleConnect}
