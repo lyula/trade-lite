@@ -37,6 +37,7 @@ const AddLiveAccount = () => {
           description: "Your live trading account has been created.",
           duration: 4000,
         });
+        window.dispatchEvent(new Event("dashboard-refresh"));
         navigate("/dashboard");
       } else {
         toast({
@@ -108,9 +109,6 @@ const AddLiveAccount = () => {
               onChange={e => setSelectedAccountType(e.target.value)}
               className="w-full border rounded px-2 py-2"
             >
-              <option value="standard">Standard</option>
-              <option value="pro">Pro</option>
-              <option value="premier">Premier</option>
               <option value="automated-standard">Automated Standard</option>
               <option value="automated-pro">Automated Pro</option>
               <option value="automated-premier">Automated Premier</option>

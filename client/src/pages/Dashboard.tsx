@@ -32,7 +32,7 @@ const Dashboard = () => {
   const { user } = useUserContext();
 
   useEffect(() => {
-    async function fetchLiveAccounts() {
+    async function fetchAndCacheData(forceRefresh = false) {
       if (!user || !user.id) {
         setLiveAccounts([]);
         setDemoAccounts([]);
@@ -41,55 +41,62 @@ const Dashboard = () => {
         setLoading(false);
         return;
       }
+      // Try to load from cache unless forceRefresh
+      if (!forceRefresh) {
+        const cached = localStorage.getItem(`dashboard-data-${user.id}`);
+        if (cached) {
+          const { liveAccounts, demoAccounts, wallets, recentActivity } = JSON.parse(cached);
+          setLiveAccounts(liveAccounts || []);
+          setDemoAccounts(demoAccounts || []);
+          setWallets(wallets || []);
+          setRecentActivity(recentActivity || { deposits: [], withdrawals: [] });
+          setLoading(false);
+          return;
+        }
+      }
+      // Fetch fresh data
+      let liveAccounts = [], demoAccounts = [], wallets = [], recentActivity = { deposits: [], withdrawals: [] };
       try {
         const res = await fetch(`${API_URL}/api/live-accounts?userId=${user.id}`);
         const data = await res.json();
-        if (data.success && Array.isArray(data.accounts)) {
-          setLiveAccounts(data.accounts);
-        } else {
-          setLiveAccounts([]);
-        }
-      } catch {
-        setLiveAccounts([]);
-      }
+        liveAccounts = data.success && Array.isArray(data.accounts) ? data.accounts : [];
+        setLiveAccounts(liveAccounts);
+      } catch { setLiveAccounts([]); }
       try {
         const res = await fetch(`${API_URL}/api/demo-accounts?userId=${user.id}`);
         const data = await res.json();
-        if (data.success && Array.isArray(data.accounts)) {
-          setDemoAccounts(data.accounts);
-        } else {
-          setDemoAccounts([]);
-        }
-      } catch {
-        setDemoAccounts([]);
-      }
+        demoAccounts = data.success && Array.isArray(data.accounts) ? data.accounts : [];
+        setDemoAccounts(demoAccounts);
+      } catch { setDemoAccounts([]); }
       try {
         const res = await fetch(`${API_URL}/api/wallets?userId=${user.id}`);
         const data = await res.json();
-        if (data.success && Array.isArray(data.wallets)) {
-          setWallets(data.wallets);
-        } else {
-          setWallets([]);
-        }
-      } catch {
-        setWallets([]);
-      }
+        wallets = data.success && Array.isArray(data.wallets) ? data.wallets : [];
+        setWallets(wallets);
+      } catch { setWallets([]); }
       try {
         const res = await fetch(`${API_URL}/api/activity/recent?userId=${user.id}`);
         const data = await res.json();
-        if (data.success) {
-          setRecentActivity({ deposits: data.deposits || [], withdrawals: data.withdrawals || [] });
-        } else {
-          setRecentActivity({ deposits: [], withdrawals: [] });
-        }
-      } catch {
-        setRecentActivity({ deposits: [], withdrawals: [] });
-      }
+        recentActivity = data.success ? { deposits: data.deposits || [], withdrawals: data.withdrawals || [] } : { deposits: [], withdrawals: [] };
+        setRecentActivity(recentActivity);
+      } catch { setRecentActivity({ deposits: [], withdrawals: [] }); }
       setLoading(false);
+      // Cache the data
+      localStorage.setItem(`dashboard-data-${user.id}`, JSON.stringify({ liveAccounts, demoAccounts, wallets, recentActivity }));
     }
-    fetchLiveAccounts();
+
+    // Detect login (no cache) or force refresh
+    fetchAndCacheData();
+
+    // Listen for custom events to force refresh
+    window.addEventListener("dashboard-refresh", () => fetchAndCacheData(true));
+    return () => {
+      window.removeEventListener("dashboard-refresh", () => fetchAndCacheData(true));
+    };
   }, [user]);
 
+  // To trigger refresh after creating account/wallet, dispatch event:
+  // window.dispatchEvent(new Event("dashboard-refresh"));
   return (
     <div className="space-y-6">
       {/* Success Message */}

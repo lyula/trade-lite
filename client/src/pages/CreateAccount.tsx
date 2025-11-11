@@ -103,9 +103,6 @@ const CreateAccountPage: React.FC = () => {
               >
                 {typeParam === "live" ? (
                   <>
-                    <option value="standard">Standard</option>
-                    <option value="pro">Pro</option>
-                    <option value="premier">Premier</option>
                     <option value="automated-standard">Automated Standard</option>
                     <option value="automated-pro">Automated Pro</option>
                     <option value="automated-premier">Automated Premier</option>
