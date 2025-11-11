@@ -118,7 +118,10 @@ exports.createLiveAccount = async (req, res) => {
       usdBalance,
       kesBalance,
       margin: 0,
-      credit: 0
+      credit: 0,
+      totalDeposits: 0, // Accounts start with 0 deposits
+      totalProfits: 0,
+      withdrawableBalance: 0
     });
     await liveAccount.save();
     

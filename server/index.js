@@ -75,6 +75,14 @@ app.use('/api/contact', contactRoutes);
 const passwordRoutes = require('./routes/password');
 app.use('/api/password', passwordRoutes);
 
+// Automated trading routes
+const automatedTradingRoutes = require('./routes/automatedTrading');
+app.use('/api/automated-trading', automatedTradingRoutes);
+
+// Transfer routes
+const transferRoutes = require('./routes/transfer');
+app.use('/api/transfer', transferRoutes);
+
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     cors(corsOptions)(req, res, next);
@@ -88,5 +96,8 @@ const PORT = process.env.PORT || 5000;
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    
+    // Start automated trading scheduler
+    require('./automatedTradingScheduler');
   });
 });

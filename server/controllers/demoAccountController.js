@@ -92,7 +92,10 @@ exports.createDemoAccount = async (req, res) => {
       tradingAccountNumber,
       equity: 10000,
       balance: 10000,
-      margin: 0
+      margin: 0,
+      totalDeposits: 10000, // Demo accounts start with $10,000
+      totalProfits: 0,
+      withdrawableBalance: 0
     });
     await demoAccount.save();
     res.status(201).json({ success: true, account: demoAccount });
