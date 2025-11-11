@@ -12,48 +12,30 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Generate a unique referral code (no name chars, just random)
-    const generateReferralCode = () => {
-      return Math.random().toString(36).substring(2, 10).toUpperCase();
-    };
+    // Generate OTP for registration verification
+    const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
+    const code = generateOtp();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const Otp = require('../models/Otp');
+    await Otp.deleteMany({ email, type: 'registration' }); // Remove previous registration OTPs for this email
+    await Otp.create({ email, code, type: 'registration', expiresAt });
 
-    let referralCode;
-    let codeExists = true;
-    while (codeExists) {
-      referralCode = generateReferralCode();
-      codeExists = await User.findOne({ referralCode });
-    }
-
-    // Optionally, get referredBy from req.body if you want to support referral links
-    let referredBy = null;
-    if (req.body.referredBy) {
-      // Find the user who owns the referral code
-      const referrer = await User.findOne({ referralCode: req.body.referredBy });
-      if (referrer) {
-        referredBy = referrer.referralCode; // Store the code of the link owner
-      }
-    }
-
-    // Create new user
-    const user = new User({ firstName, lastName, gender, email, city, phone, password, referralCode, referredBy });
-    await user.save();
-
-    // Send welcome email using shared email sender
+    // Send OTP email for registration
     try {
       const { sendAccountEmail } = require('../utils/emailSender');
       await sendAccountEmail({
         to: email,
-        subject: 'Welcome to EquityVault Securities!',
-        accountDetails: `Welcome, ${firstName}!\n\nThank you for registering with EquityVault Securities.\nYour account has been created successfully.\nYou can now log in and start using our platform.`,
-        type: 'Welcome',
+        subject: 'Your EquityVault Registration OTP',
+        accountDetails: code,
+        type: 'OTP',
       });
-      console.log('Welcome email sent successfully to:', email);
+      console.log('Registration OTP email sent successfully to:', email);
     } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError.response?.data || emailError.message);
+      console.error('Failed to send registration OTP email:', emailError.response?.data || emailError.message);
       // Don't fail registration if email fails
     }
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(200).json({ message: "OTP sent to email for verification" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

@@ -1,11 +1,15 @@
 const express = require("express");
 const { register, login } = require("../controllers/authController");
+const { verifyOtpAndRegister } = require("../controllers/verifyOtpAndRegister");
 const jwt = require("jsonwebtoken"); // Import jwt for token validation
 
 const router = express.Router();
 
 // Register route
 router.post("/register", register);
+
+// Verify OTP and create user route
+router.post("/verify-otp-register", verifyOtpAndRegister);
 
 // Login route
 router.post("/login", login);

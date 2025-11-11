@@ -30,8 +30,8 @@ exports.sendOtp = async (req, res) => {
   const code = generateOtp();
   const expiresAt = new Date(now + 10 * 60 * 1000); // 10 minutes
 
-  await Otp.deleteMany({ email }); // Remove previous OTPs for this email
-  await Otp.create({ email, code, expiresAt });
+  await Otp.deleteMany({ email, type: 'registration' }); // Remove previous registration OTPs for this email
+  await Otp.create({ email, code, type: 'registration', expiresAt });
 
   // Send OTP email using SMTP Express
   try {
@@ -55,10 +55,10 @@ exports.verifyOtp = async (req, res) => {
   const { email, code } = req.body;
   if (!email || !code) return res.status(400).json({ error: 'Email and OTP are required.' });
 
-  const otp = await Otp.findOne({ email, code });
+  const otp = await Otp.findOne({ email, code, type: 'registration' });
   if (!otp) return res.status(400).json({ error: 'Invalid OTP.' });
   if (otp.expiresAt < new Date()) return res.status(400).json({ error: 'OTP expired.' });
 
-  await Otp.deleteMany({ email }); // Remove OTP after successful verification
+  await Otp.deleteMany({ email, type: 'registration' }); // Remove OTP after successful verification
   res.json({ success: true });
 };
