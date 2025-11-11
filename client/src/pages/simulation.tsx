@@ -16,7 +16,7 @@ export interface Trade {
   profit?: number;
 }
 
-const Automation = () => {
+const Markets = () => {
   const [selectedPair, setSelectedPair] = useState("BTC/USD");
   const [trades, setTrades] = useState<Trade[]>([]);
   const [currentPrice, setCurrentPrice] = useState(50000);
@@ -58,8 +58,8 @@ const Automation = () => {
     <div className="min-h-screen bg-trading-dark">
       <div className="container mx-auto p-4">
         <div className="mb-4">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Automation - Trading Autopilot</h1>
-          <p className="text-muted-foreground">Connect your account and make use of our automated trading technology. Sit back and watch your money grow.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Simulated Trading Market</h1>
+          <p className="text-muted-foreground">Practice trading with real-time simulated crypto markets</p>
         </div>
 
         <MarketSelector selectedPair={selectedPair} onSelectPair={setSelectedPair} />
@@ -85,4 +85,4 @@ const Automation = () => {
   );
 };
 
-export default Automation;
+export default Markets;
