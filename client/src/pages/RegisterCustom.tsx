@@ -73,26 +73,14 @@ const RegisterCustom = () => {
       return;
     }
 
-    // Step 2: Verify OTP
+    // Step 2: Verify OTP and Register
     if (otpSent && !otp) {
       setOtpError("Please enter the OTP sent to your email.");
       setLoading(false);
       return;
     }
-    try {
-      const verifyRes = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/otp/verify`, { email, code: otp });
-      if (!verifyRes.data.success) {
-        setOtpError("Invalid or expired OTP.");
-        setLoading(false);
-        return;
-      }
-    } catch (error) {
-      setOtpError(error.response?.data?.error || "Invalid or expired OTP.");
-      setLoading(false);
-      return;
-    }
-
-    // Step 3: Register user
+    
+    // Verify OTP and create user in one step
     try {
       const userData = {
         firstName,
@@ -103,14 +91,17 @@ const RegisterCustom = () => {
         phone,
         password,
         referredBy: referredBy || undefined,
+        code: otp,
       };
-      await registerUser(userData);
-      setCustomSuccess("Registration successful!");
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-otp-register`, userData);
+      setCustomSuccess("Registration successful! You can now log in.");
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
-      setCustomError(
-        error.response?.data?.message ||
-          "Registration failed. Please try again."
-      );
+      if (error.response?.status === 400) {
+        setOtpError(error.response?.data?.message || "Invalid or expired OTP.");
+      } else {
+        setCustomError(error.response?.data?.message || "Registration failed. Please try again.");
+      }
     }
     setLoading(false);
   };
