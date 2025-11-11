@@ -107,9 +107,9 @@ const LoginCustom = () => {
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" /> Remember me
             </label>
-            <a href="#" className="text-sm text-teal-500 hover:underline">
+            <Link to="/forgot-password" className="text-sm text-teal-500 hover:underline">
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded" disabled={loading}>
@@ -126,6 +126,7 @@ const LoginCustom = () => {
             )}
           </Button>
         </form>
+
 
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account? <Link to="/register" className="text-teal-500 hover:underline">Create Live Account</Link>
