@@ -46,6 +46,10 @@ import AddWalletAccount from "./pages/AddWalletAccount";
 import DepositToAccount from "./pages/DepositToAccount";
 import LegalTerms from "./pages/LegalTerms";
 import TransferFunds from "./pages/TransferFunds";
+import ApiAccess from "./pages/ApiAccess";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import RiskDisclosure from "./pages/RiskDisclosure";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +109,10 @@ const App = () => (
               <Route path="create-wallet" element={<CreateWallet />} />
             </Route>
             <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/apiaccess" element={<ApiAccess />} />
+            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+            <Route path="/termsofservice" element={<TermsOfService />} />
+            <Route path="/riskdisclosure" element={<RiskDisclosure />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

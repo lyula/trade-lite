@@ -38,7 +38,7 @@ const Footer = () => {
               <li><a href="#" className="text-muted-foreground hover:text-accent transition-colors">Web-Based Trading</a></li>
               <li><a href="#" className="text-muted-foreground hover:text-accent transition-colors">In-Platform Trading</a></li>
               <li><a href="#" className="text-muted-foreground hover:text-accent transition-colors">Bot Trading</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-accent transition-colors">API Access</a></li>
+              <li><a href="/apiaccess" className="text-muted-foreground hover:text-accent transition-colors">API Access</a></li>
             </ul>
           </div>
           
@@ -75,13 +75,13 @@ const Footer = () => {
               © {currentYear} EquityVault. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors text-sm">
+              <a href="/privacypolicy" className="text-muted-foreground hover:text-accent transition-colors text-sm">
                 Privacy Policy
               </a>
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors text-sm">
+              <a href="/termsofservice" className="text-muted-foreground hover:text-accent transition-colors text-sm">
                 Terms of Service
               </a>
-              <a href="#" className="text-muted-foreground hover:text-accent transition-colors text-sm">
+              <a href="/riskdisclosure" className="text-muted-foreground hover:text-accent transition-colors text-sm">
                 Risk Disclosure
               </a>
             </div>
